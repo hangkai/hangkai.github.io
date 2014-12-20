@@ -1,0 +1,716 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="baidu_union_verify" content="d1952c66cf48912e21c18c7c581f382a">
+  <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8" />
+<meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88" />
+  
+    <title>jdbcTemplate | Hang&#39;s blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="hang">
+    
+    <meta name="description" content="Jdbctemplate 的基本使用
+依赖：
+&amp;lt;dependencies&amp;gt;
+    &amp;lt;dependency&amp;gt;
+        &amp;lt;groupId&amp;gt;org.springframework&amp;lt;/groupId&amp;gt;
+        &amp;lt;artifactId&amp;g">
+    
+    
+    
+    
+    <link rel="alternate" href="atom.xml" title="Hang&#39;s blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            var _bdId ='391982416296a0d54221f59fe35250d4';
+             hm.src = "//hm.baidu.com/hm.js?" + _bdId;
+             var s = document.getElementsByTagName("script")[0]; 
+             s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+     
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Hang&#39;s blog">Hang&#39;s blog</a></h1>
+				<a class="blog-motto"></a>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">首页</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+					<li>
+					
+                                            <form class="search" action=http://zhannei.baidu.com/cse/search target="_blank">
+                                            <label>Search</label>
+                                        <input name="s" type="hidden" value= null ><input type="text" name="q" size="30" placeholder="搜索"><br>
+					
+					</li>
+				</ul>
+                            </nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2014/12/20/jdbcTemplate/" title="jdbcTemplate" itemprop="url">jdbcTemplate</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="www.lkh.im" title="hang">hang</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2014-12-20T03:43:20.000Z" itemprop="datePublished">12月 20 2014</time>
+    更新日期:<time datetime="2014-12-20T03:44:06.000Z" itemprop="dateModified">12月 20 2014</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Jdbctemplate_的基本使用"><span class="toc-number">1.</span> <span class="toc-text">Jdbctemplate 的基本使用</span></a></li></ol>
+		</div>
+		
+		<h1 id="Jdbctemplate_的基本使用">Jdbctemplate 的基本使用</h1>
+<p>依赖：</p>
+<pre><code><span class="tag">&lt;<span class="title">dependencies</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">dependency</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.springframework<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>spring-context<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">version</span>&gt;</span>4.1.3.RELEASE<span class="tag">&lt;/<span class="title">version</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">dependency</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">dependency</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>commons-dbcp<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>commons-dbcp<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">version</span>&gt;</span>1.4<span class="tag">&lt;/<span class="title">version</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">dependency</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">dependency</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.springframework<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>spring-jdbc<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">version</span>&gt;</span>4.1.3.RELEASE<span class="tag">&lt;/<span class="title">version</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">dependency</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">dependency</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.springframework<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>spring-test<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">version</span>&gt;</span>4.0.5.RELEASE<span class="tag">&lt;/<span class="title">version</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="title">scope</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">dependency</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">dependency</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.aspectj<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>aspectjweaver<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">version</span>&gt;</span>1.8.4<span class="tag">&lt;/<span class="title">version</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">dependency</span>&gt;</span>
+<span class="comment">&lt;!-- jdbc driver --&gt;</span>
+<span class="tag">&lt;<span class="title">dependency</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>mysql<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>mysql-connector-java<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">version</span>&gt;</span>5.1.21<span class="tag">&lt;/<span class="title">version</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">scope</span>&gt;</span>runtime<span class="tag">&lt;/<span class="title">scope</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">dependency</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">dependencies</span>&gt;</span>
+</code></pre><p>建立数据库表：</p>
+<pre><code><span class="operator"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`user`</span> (
+  <span class="string">`id`</span> <span class="built_in">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> AUTO_INCREMENT,
+  <span class="string">`username`</span> <span class="built_in">varchar</span>(<span class="number">255</span>) <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,
+  <span class="string">`password`</span> <span class="built_in">varchar</span>(<span class="number">255</span>) <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,
+  <span class="string">`createDate`</span> datetime <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,
+  <span class="string">`modifyDate`</span> <span class="built_in">varchar</span>(<span class="number">255</span>) <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,
+  <span class="string">`type`</span> <span class="built_in">varchar</span>(<span class="number">255</span>) <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,
+  <span class="keyword">PRIMARY</span> <span class="keyword">KEY</span> (<span class="string">`id`</span>)
+) <span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span> AUTO_INCREMENT=<span class="number">223</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8;</span>
+</code></pre><p>aplicationContext.xml的配置</p>
+<pre><code><span class="pi">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="tag">&lt;<span class="title">beans</span> <span class="attribute">xmlns</span>=<span class="value">"http://www.springframework.org/schema/beans"</span>
+<span class="attribute">xmlns:mvc</span>=<span class="value">"http://www.springframework.org/schema/mvc"</span>
+<span class="attribute">xmlns:xsi</span>=<span class="value">"http://www.w3.org/2001/XMLSchema-instance"</span>
+<span class="attribute">xmlns:context</span>=<span class="value">"http://www.springframework.org/schema/context"</span>
+<span class="attribute">xmlns:aop</span>=<span class="value">"http://www.springframework.org/schema/aop"</span>
+<span class="attribute">xmlns:tx</span>=<span class="value">"http://www.springframework.org/schema/tx"</span>
+<span class="attribute">xsi:schemaLocation</span>=<span class="value">"http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-3.1.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx-3.1.xsd"</span>&gt;</span>
+<span class="comment">&lt;!-- 扫描包 --&gt;</span>
+<span class="tag">&lt;<span class="title">context:annotation-config</span>/&gt;</span>
+    <span class="tag">&lt;<span class="title">context:component-scan</span> <span class="attribute">base-package</span>=<span class="value">"com.hang.*"</span> /&gt;</span>
+<span class="comment">&lt;!-- 配置jdbc --&gt;</span>
+<span class="tag">&lt;<span class="title">bean</span> <span class="attribute">class</span>=<span class="value">"org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer"</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"locations"</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">value</span>&gt;</span>classpath:jdbc.properties<span class="tag">&lt;/<span class="title">value</span>&gt;</span>
+        <span class="tag">&lt;/<span class="title">property</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">bean</span>&gt;</span>
+<span class="comment">&lt;!-- 配置數據源 --&gt;</span>
+<span class="tag">&lt;<span class="title">bean</span> <span class="attribute">id</span>=<span class="value">"dataSource"</span> <span class="attribute">class</span>=<span class="value">"org.apache.commons.dbcp.BasicDataSource"</span>
+<span class="attribute">destroy-method</span>=<span class="value">"close"</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"driverClassName"</span> <span class="attribute">value</span>=<span class="value">"${jdbc.driver}"</span> /&gt;</span>
+        <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"url"</span> <span class="attribute">value</span>=<span class="value">"${jdbc.url}"</span> /&gt;</span>
+        <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"username"</span> <span class="attribute">value</span>=<span class="value">"${jdbc.username}"</span> /&gt;</span>
+        <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"password"</span> <span class="attribute">value</span>=<span class="value">"${jdbc.password}"</span> /&gt;</span>
+<span class="comment">&lt;!-- 连接池启动时的初始值 --&gt;</span>
+<span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"initialSize"</span> <span class="attribute">value</span>=<span class="value">"${initialSize}"</span>/&gt;</span>
+        <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"maxActive"</span> <span class="attribute">value</span>=<span class="value">"${maxActive}"</span>/&gt;</span>
+        <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"maxIdle"</span> <span class="attribute">value</span>=<span class="value">"${maxIdle}"</span>/&gt;</span>
+        <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"minIdle"</span> <span class="attribute">value</span>=<span class="value">"${minIdle}"</span>/&gt;</span>
+    <span class="tag">&lt;/<span class="title">bean</span>&gt;</span>
+<span class="comment">&lt;!-- 配置jdbcTemplate模板 --&gt;</span>
+<span class="tag">&lt;<span class="title">bean</span> <span class="attribute">id</span>=<span class="value">"jdbcTemplate"</span> <span class="attribute">class</span>=<span class="value">"org.springframework.jdbc.core.JdbcTemplate"</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"dataSource"</span> <span class="attribute">ref</span>=<span class="value">"dataSource"</span> /&gt;</span>
+    <span class="tag">&lt;/<span class="title">bean</span>&gt;</span>
+<span class="comment">&lt;!-- 配置 transactionManager事物管理--&gt;</span>
+<span class="tag">&lt;<span class="title">bean</span> <span class="attribute">id</span>=<span class="value">"transactionManager"</span> <span class="attribute">class</span>=<span class="value">"org.springframework.jdbc.datasource.DataSourceTransactionManager"</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"dataSource"</span> <span class="attribute">ref</span>=<span class="value">"dataSource"</span>/&gt;</span>
+    <span class="tag">&lt;/<span class="title">bean</span>&gt;</span>
+<span class="comment">&lt;!-- Spring AOP config配置切点 --&gt;</span>
+<span class="tag">&lt;<span class="title">aop:config</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">aop:pointcut</span> <span class="attribute">expression</span>=<span class="value">"execution(* com.hang.service.*.*(..))"</span> <span class="attribute">id</span>=<span class="value">"bussinessService"</span> /&gt;</span>
+        <span class="tag">&lt;<span class="title">aop:advisor</span> <span class="attribute">advice-ref</span>=<span class="value">"txAdvice"</span> <span class="attribute">pointcut-ref</span>=<span class="value">"bussinessService"</span>/&gt;</span>
+    <span class="tag">&lt;/<span class="title">aop:config</span>&gt;</span>
+<span class="comment">&lt;!-- 配置那个类那个方法用到事务处理 --&gt;</span>
+<span class="tag">&lt;<span class="title">tx:advice</span> <span class="attribute">id</span>=<span class="value">"txAdvice"</span> <span class="attribute">transaction-manager</span>=<span class="value">"transactionManager"</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">tx:attributes</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">tx:method</span> <span class="attribute">name</span>=<span class="value">"get*"</span> <span class="attribute">read-only</span>=<span class="value">"true"</span>/&gt;</span>
+            <span class="tag">&lt;<span class="title">tx:method</span> <span class="attribute">name</span>=<span class="value">"add*"</span> <span class="attribute">propagation</span>=<span class="value">"REQUIRED"</span>/&gt;</span>
+            <span class="tag">&lt;<span class="title">tx:method</span> <span class="attribute">name</span>=<span class="value">"update*"</span> <span class="attribute">propagation</span>=<span class="value">"REQUIRED"</span>/&gt;</span>
+            <span class="tag">&lt;<span class="title">tx:method</span> <span class="attribute">name</span>=<span class="value">"delete*"</span> <span class="attribute">propagation</span>=<span class="value">"REQUIRED"</span>/&gt;</span>
+            <span class="tag">&lt;<span class="title">tx:method</span> <span class="attribute">name</span>=<span class="value">"*"</span> <span class="attribute">propagation</span>=<span class="value">"REQUIRED"</span>/&gt;</span>
+        <span class="tag">&lt;/<span class="title">tx:attributes</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">tx:advice</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">beans</span>&gt;</span>
+</code></pre><p>Jdbc.properties</p>
+<pre><code>jdbc.<span class="variable">driver=</span>com.mysql.jdbc.Driver
+jdbc.<span class="variable">url=</span>jdbc:mysql://localhost:<span class="number">3306</span>/jdbcTemplate?<span class="variable">useUnicode=</span><span class="constant">true</span>&amp;amp;<span class="variable">characterEncoding=</span>UTF-<span class="number">8</span>
+jdbc.<span class="variable">username=</span>root
+jdbc.<span class="variable">password=</span><span class="variable">rootinitialSize=</span><span class="number">1</span>
+<span class="variable">maxActive=</span><span class="number">500</span>
+<span class="variable">maxIdle=</span><span class="number">2</span>
+<span class="variable">minIdle=</span><span class="number">1</span>             
+</code></pre><p>建立User对象</p>
+<pre><code><span class="keyword">package</span> com.hang.entity;
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>{
+
+   <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> serialVersionUID = <span class="number">1</span>L;
+   <span class="keyword">private</span> <span class="keyword">int</span> id;
+   <span class="keyword">private</span> String password;
+   <span class="keyword">private</span> String username;
+   <span class="keyword">private</span> String createDate;
+   <span class="keyword">private</span> String modifyDate;
+   <span class="keyword">private</span> String type;
+<span class="javadoc">/** 省略set get 方法**/</span>
+}
+</code></pre><p>建立JdbcTempBaseDao，用于获取 jdbcTemplate对象的公共类</p>
+<pre><code><span class="keyword">package</span> com.hang.dao.base;
+<span class="keyword">import</span> org.springframework.jdbc.core.JdbcTemplate;
+<span class="keyword">import</span> org.springframework.jdbc.core.support.JdbcDaoSupport;
+<span class="keyword">import</span> javax.annotation.PostConstruct;
+<span class="keyword">import</span> javax.annotation.Resource;
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JdbcTempBaseDao</span> <span class="keyword">extends</span> <span class="title">JdbcDaoSupport</span> </span>{
+
+   <span class="javadoc">/**
+    */</span>
+<span class="annotation">@Resource</span>(name = <span class="string">"jdbcTemplate"</span>)
+   <span class="keyword">public</span> JdbcTemplate jdbcTemplate;
+<span class="annotation">@PostConstruct</span>  
+<span class="keyword">public</span> <span class="keyword">void</span> <span class="title">initSqlMapClient</span>() {  
+         <span class="keyword">super</span>.setJdbcTemplate(jdbcTemplate);
+} 
+}
+</code></pre><p>建立IUserDao接口，对userDao的基本操作</p>
+<pre><code><span class="keyword">package</span> com.hang.dao;
+<span class="keyword">import</span> com.hang.entity.User;
+<span class="keyword">import</span> java.util.List;
+<span class="keyword">import</span> java.util.Map;
+<span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">IUserDao</span> </span>{
+   <span class="keyword">public</span> List&lt;User&gt; <span class="title">getUserList</span>();
+   <span class="keyword">public</span> List&lt;User&gt; <span class="title">getUserLists</span>(Map&lt;String, Object&gt; map);
+   <span class="keyword">public</span> Integer <span class="title">getUserCount</span>(Map&lt;String, Object&gt; map);
+   <span class="keyword">public</span> User <span class="title">getUserById</span>(Integer primaryKeyId);
+   <span class="keyword">public</span> <span class="keyword">void</span> <span class="title">delUserById</span>(Integer primaryKeyId);
+   <span class="keyword">public</span> User <span class="title">addUser</span>(User entity);
+   <span class="keyword">public</span> <span class="keyword">void</span> <span class="title">editUser</span>(User entity);
+}
+</code></pre><p>IUserDao 的实现</p>
+<pre><code><span class="keyword">package</span> com.hang.dao.impl;
+<span class="keyword">import</span> com.hang.dao.IUserDao;
+<span class="keyword">import</span> com.hang.dao.base.JdbcTempBaseDao;
+<span class="keyword">import</span> com.hang.entity.User;
+<span class="keyword">import</span> org.springframework.jdbc.core.BeanPropertyRowMapper;
+<span class="keyword">import</span> org.springframework.jdbc.core.PreparedStatementCreator;
+<span class="keyword">import</span> org.springframework.jdbc.core.RowCallbackHandler;
+<span class="keyword">import</span> org.springframework.jdbc.support.GeneratedKeyHolder;
+<span class="keyword">import</span> org.springframework.stereotype.Repository;
+<span class="keyword">import</span> java.sql.Connection;
+<span class="keyword">import</span> java.sql.PreparedStatement;
+<span class="keyword">import</span> java.sql.ResultSet;
+<span class="keyword">import</span> java.sql.SQLException;
+<span class="keyword">import</span> java.util.ArrayList;
+<span class="keyword">import</span> java.util.List;
+<span class="keyword">import</span> java.util.Map;
+<span class="annotation">@Repository</span>
+<span class="annotation">@SuppressWarnings</span>(<span class="string">"all"</span>)
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserDaoImpl</span> <span class="keyword">extends</span> <span class="title">JdbcTempBaseDao</span> <span class="keyword">implements</span> <span class="title">IUserDao</span> </span>{
+
+   <span class="annotation">@Override</span>
+<span class="keyword">public</span> List&lt;User&gt; <span class="title">getUserList</span>() {
+      String sql=<span class="string">"select * from user "</span>;
+      <span class="keyword">final</span> List&lt;User&gt;  list= <span class="keyword">new</span> ArrayList&lt;User&gt;();
+jdbcTemplate.query(sql, <span class="keyword">new</span> RowCallbackHandler(){
+         <span class="annotation">@Override</span>
+<span class="keyword">public</span> <span class="keyword">void</span> <span class="title">processRow</span>(ResultSet rs) <span class="keyword">throws</span> SQLException {
+            User u=<span class="keyword">new</span> User();
+u.setId(rs.getInt(<span class="string">"id"</span>));
+u.setUsername(rs.getString(<span class="string">"username"</span>));
+u.setPassword(rs.getString(<span class="string">"password"</span>));
+u.setCreateDate(rs.getString(<span class="string">"createDate"</span>));
+u.setModifyDate(rs.getString(<span class="string">"modifyDate"</span>));
+u.setType(rs.getString(<span class="string">"type"</span>));
+list.add(u);
+}
+      });
+      <span class="keyword">return</span> list;
+}
+
+   <span class="annotation">@Override</span>
+<span class="keyword">public</span> List&lt;User&gt; <span class="title">getUserLists</span>(Map&lt;String, Object&gt; map) {
+      <span class="keyword">return</span> <span class="keyword">null</span>;
+}
+
+   <span class="annotation">@Override</span>
+<span class="keyword">public</span> Integer <span class="title">getUserCount</span>(Map&lt;String, Object&gt; map) {
+       String sql = <span class="string">"select count(1) from User where id=? "</span>;
+        <span class="keyword">return</span> getJdbcTemplate().queryForObject(sql, Integer.class,map);
+}
+
+   <span class="annotation">@Override</span>
+<span class="keyword">public</span> User <span class="title">getUserById</span>(Integer primaryKeyId) {
+      String sql = <span class="string">"select id,username, password, createDate, modifyDate,type from User where id=?"</span>;
+List&lt;User&gt; userList = getJdbcTemplate().query(sql, <span class="keyword">new</span> BeanPropertyRowMapper(User.class), primaryKeyId);
+        <span class="keyword">if</span>(userList.size() == <span class="number">0</span>) {
+            <span class="keyword">return</span> <span class="keyword">null</span>;
+}
+        <span class="keyword">return</span> userList.get(<span class="number">0</span>);
+}
+
+   <span class="annotation">@Override</span>
+<span class="keyword">public</span> <span class="keyword">void</span> <span class="title">delUserById</span>(Integer primaryKeyId) {
+       String sql = <span class="string">"delete from user where id=?"</span>;
+getJdbcTemplate().update(sql, primaryKeyId);
+}
+
+   <span class="annotation">@Override</span>
+<span class="keyword">public</span> User <span class="title">addUser</span>(<span class="keyword">final</span> User entity) {
+      <span class="keyword">final</span> String sql = <span class="string">"insert into User(username, password, createDate, modifyDate,type) values(?,?,?,?,?)"</span>;
+GeneratedKeyHolder keyHolder = <span class="keyword">new</span> GeneratedKeyHolder();
+getJdbcTemplate().update(<span class="keyword">new</span> PreparedStatementCreator() {
+            <span class="annotation">@Override</span>
+<span class="keyword">public</span> PreparedStatement <span class="title">createPreparedStatement</span>(Connection connection) <span class="keyword">throws</span> SQLException {
+                PreparedStatement psst = connection.prepareStatement(sql, <span class="keyword">new</span> String[]{<span class="string">"id"</span>});
+psst.setString(<span class="number">1</span>, entity.getUsername());
+psst.setString(<span class="number">2</span>, entity.getPassword());
+psst.setString(<span class="number">3</span>, entity.getCreateDate());
+psst.setString(<span class="number">4</span>, entity.getModifyDate());
+psst.setString(<span class="number">5</span>, entity.getType());
+                <span class="keyword">return</span> psst;
+}
+        }, keyHolder);
+entity.setId(keyHolder.getKey().intValue());
+        <span class="keyword">return</span> entity;
+}
+
+   <span class="annotation">@Override</span>
+<span class="keyword">public</span> <span class="keyword">void</span> <span class="title">editUser</span>(User entity) {
+      String sql=<span class="string">"update user set username=?,password=?"</span>;
+jdbcTemplate.update(sql, User.class,entity);
+} 
+}
+</code></pre><p>UserDaoTest，对userdao的测试</p>
+<pre><code><span class="keyword">import</span> com.hang.dao.IUserDao;
+<span class="keyword">import</span> com.hang.entity.User;
+<span class="keyword">import</span> org.junit.BeforeClass;
+<span class="keyword">import</span> org.junit.Test;
+<span class="keyword">import</span> org.springframework.context.ApplicationContext;
+<span class="keyword">import</span> org.springframework.context.support.ClassPathXmlApplicationContext;
+<span class="keyword">import</span> java.util.List;
+<span class="javadoc">/**
+ * Created with IntelliJ IDEA.
+ * User: hang
+ * Date: 14-12-18
+ * Time: 上午11:44
+ * To change this template use File | Settings | File Templates.
+ */</span>
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserDaoTest</span></span>{
+
+    <span class="keyword">private</span> <span class="keyword">static</span> IUserDao userDao;
+<span class="annotation">@BeforeClass</span>
+<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">setUpBeforeClass</span>() {
+        ApplicationContext applicationContext = <span class="keyword">new</span> ClassPathXmlApplicationContext(<span class="string">"aplicationContext.xml"</span>);
+userDao = (IUserDao) applicationContext.getBean(<span class="string">"userDaoImpl"</span>);
+}
+
+    <span class="annotation">@Test</span>
+<span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getUserList</span>(){
+        List&lt;User&gt; users = userDao.getUserList();
+System.out.println(users.size());
+}
+}
+</code></pre>  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/java，jdbcTemplate/">java，jdbcTemplate</a>
+  </div>
+
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="www.lkh.im/2014/12/20/jdbcTemplate/" data-title="jdbcTemplate | Hang&#39;s blog" data-tsina="null" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2014/12/19/hello-world/"  title="Hello World">
+ <strong>NEXT:</strong><br/> 
+ <span>Hello World
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Jdbctemplate_的基本使用"><span class="toc-number">1.</span> <span class="toc-text">Jdbctemplate 的基本使用</span></a></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+<div id="authorInfo">
+	
+		<div class="author-logo"></div>		
+	
+	<div class="social-list" class="clearfix">
+		
+		
+		
+		
+		
+	</div>
+</div>
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/blog/" title="blog">blog<sup>0</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/java，jdbcTemplate/" title="java，jdbcTemplate">java，jdbcTemplate<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+      <li><a href="http://hexo.io" target="_blank" title="Hexo">Hexo</a></li>
+      <li><a href="http://gengbiao.me" target="_blank" title="coney">coney's Blog</a></li>
+    </ul>
+</div>
+
+
+  <div class="rsspart">
+	<a href="atom.xml" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+  
+  <div class="tagcloudlist">
+    <p class="asidetitle">标签云</p>
+    <div class="tagcloudlist clearfix">
+       <a href="/tags/java，jdbcTemplate/" style="font-size: NaNpx;">java，jdbcTemplate</a>
+    </div>
+  </div>
+
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+    
+            <p class="copyright"> © 2014 
+		
+		<a href="www.lkh.im" target="_blank" title="hang">hang</a>
+		
+            && Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> && Theme by <a href="http://gengbiao.me" target="_blank" title="coney">coney</a>
+            </div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"null"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
+
+
+
+
+
+<script>
+    
+        var _bdImg = '4';
+    
+    window._bd_share_config={
+        "common":{
+            "bdSnsKey":{
+
+            },
+            "bdText":"",
+            "bdMini":"2",
+            "bdMiniList":[
+                "qzone",
+                "tsina",
+                "weixin",
+                "renren",
+                "tqq",
+                "tieba",
+                "douban",
+                "sqq",
+                "diandian",
+                "huaban",
+                "youdao",
+                "mail",
+                "ty",
+                "fbook",
+                "twi",
+                "linkedin",
+                "copy",
+                "print"
+            ],
+            "bdPic":"",
+            "bdStyle":"0",
+            "bdSize":"16"
+        },
+        "slide":{
+            "type":"slide",
+            "bdImg":_bdImg,
+            "bdPos":"right",
+            "bdTop":"350"
+        },
+        "image":{
+            "viewList":[
+                "weixin",
+                "qzone",
+                "tsina",
+                "renren",
+                "douban",
+                "tqq"
+            ],
+            "viewText":"分享：",
+            "viewSize":"16"
+        },
+        "selectShare":{
+            "bdContainerClass":null,
+            "bdSelectMiniList":[
+                "weixin",
+                "qzone",
+                "tsina",
+                "renren",
+                "douban",
+                "tqq"
+            ]
+        }
+    };
+    with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+</script>
+
+
+
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'null', 'null');  
+ga('send', 'pageview');
+</script>
+
+
+  </body>
+</html>
+
