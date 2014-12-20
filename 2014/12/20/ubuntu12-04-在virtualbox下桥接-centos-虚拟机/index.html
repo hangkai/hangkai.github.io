@@ -7,12 +7,21 @@
   <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8" />
 <meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88" />
   
-    <title>Hello World | Hang&#39;s blog</title>
+    <title>ubuntu12.04 在virtualbox下桥接 centos 虚拟机 | Hang&#39;s blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="hang">
     
-    <meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in ">
+    <meta name="description" content="1.主机的网络环境
+ 
+2.设置virualbox的网络连接方式
+选择桥接网络，并选择eth0
+3.修改虚拟机的网络配置
+修改/etc/sysconfig/network-script/ifcfg-eth0
+BOOTPROTO=static
+ONBOOT=yes
+TYPE=Ethernet
+IPAD">
     
     
     
@@ -75,15 +84,15 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2014/12/19/hello-world/" title="Hello World" itemprop="url">Hello World</a>
+      <a href="/2014/12/20/ubuntu12-04-在virtualbox下桥接-centos-虚拟机/" title="ubuntu12.04 在virtualbox下桥接 centos 虚拟机" itemprop="url">ubuntu12.04 在virtualbox下桥接 centos 虚拟机</a>
   </h1>
   <p class="article-author">By
     
       <a href="www.lkh.im" title="hang">hang</a>
     </p>
   <p class="article-time">
-    <time datetime="2014-12-19T08:15:22.000Z" itemprop="datePublished">12月 19 2014</time>
-    更新日期:<time datetime="2014-12-19T08:15:22.000Z" itemprop="dateModified">12月 19 2014</time>
+    <time datetime="2014-12-20T06:08:06.000Z" itemprop="datePublished">12月 20 2014</time>
+    更新日期:<time datetime="2014-12-20T06:09:10.000Z" itemprop="dateModified">12月 20 2014</time>
     
   </p>
 </header>
@@ -92,37 +101,45 @@
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Quick_Start"><span class="toc-number">1.</span> <span class="toc-text">Quick Start</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Create_a_new_post"><span class="toc-number">1.1.</span> <span class="toc-text">Create a new post</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Run_server"><span class="toc-number">1.2.</span> <span class="toc-text">Run server</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Generate_static_files"><span class="toc-number">1.3.</span> <span class="toc-text">Generate static files</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Deploy_to_remote_sites"><span class="toc-number">1.4.</span> <span class="toc-text">Deploy to remote sites</span></a></li></ol></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-主机的网络环境"><span class="toc-number">1.</span> <span class="toc-text">1.主机的网络环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-设置virualbox的网络连接方式"><span class="toc-number">2.</span> <span class="toc-text">2.设置virualbox的网络连接方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-修改虚拟机的网络配置"><span class="toc-number">3.</span> <span class="toc-text">3.修改虚拟机的网络配置</span></a></li></ol>
 		</div>
 		
-		<p>Welcome to <a href="http://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="http://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="http://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">trobuleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick_Start">Quick Start</h2>
-<h3 id="Create_a_new_post">Create a new post</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
-
-<p>More info: <a href="http://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run_server">Run server</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
-
-<p>More info: <a href="http://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate_static_files">Generate static files</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
-
-<p>More info: <a href="http://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy_to_remote_sites">Deploy to remote sites</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
-
-<p>More info: <a href="http://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+		<h2 id="1-主机的网络环境">1.主机的网络环境</h2>
+<p><img src="/images/2014/12/20/1.jpeg" alt=""> </p>
+<h2 id="2-设置virualbox的网络连接方式">2.设置virualbox的网络连接方式</h2>
+<p><img src="/images/2014/12/20/2.jpeg" alt=""><br>选择桥接网络，并选择eth0</p>
+<h2 id="3-修改虚拟机的网络配置">3.修改虚拟机的网络配置</h2>
+<p>修改/etc/sysconfig/network-script/ifcfg-eth0</p>
+<p>BOOTPROTO=static</p>
+<p>ONBOOT=yes</p>
+<p>TYPE=Ethernet</p>
+<p>IPADDR=172.16.3.166      //虚拟机的ip</p>
+<p>NETMASK=255.255.255.0  //子网掩码</p>
+<p>GATEWAY=172.16.3.254   //网关</p>
+<p>然后需要添加dns</p>
+<p>vi /etc/resolv.conf</p>
+<p>nameserver 202.96.128.86 </p>
+<p>重启网络</p>
+<p>service network restart</p>
+<p>再查看虚拟机的ip，eth0的ip已经变修改成更主机相同的网段<br><img src="/images/2014/12/20/3.jpeg" alt=""> </p>
+<p>并ping通主机<br><img src="/images/2014/12/20/4.jpeg" alt=""> </p>
+<p>再尝试通过主机shh到centos虚拟上<br><img src="/images/2014/12/20/5.jpeg" alt=""> </p>
+<p>现在主机和虚拟机已经是通个网段上，并且连通了</p>
   
 	</div>
 		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/ubuntu，linux，centos/">ubuntu，linux，centos</a>
+  </div>
 
 
 
 
 <div class="article-share" id="share">
 
-  <div data-url="www.lkh.im/2014/12/19/hello-world/" data-title="Hello World | Hang&#39;s blog" data-tsina="null" class="share clearfix">
+  <div data-url="www.lkh.im/2014/12/20/ubuntu12-04-在virtualbox下桥接-centos-虚拟机/" data-title="ubuntu12.04 在virtualbox下桥接 centos 虚拟机 | Hang&#39;s blog" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -131,14 +148,14 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2014/12/20/jdbcTemplate/" title="jdbcTemplate">
-  <strong>PREVIOUS:</strong><br/>
-  <span>
-  jdbcTemplate</span>
+
+<div class="next">
+<a href="/2014/12/20/jdbcTemplate/"  title="jdbcTemplate">
+ <strong>NEXT:</strong><br/> 
+ <span>jdbcTemplate
+</span>
 </a>
 </div>
-
 
 </nav>
 
@@ -152,7 +169,7 @@
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Quick_Start"><span class="toc-number">1.</span> <span class="toc-text">Quick Start</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Create_a_new_post"><span class="toc-number">1.1.</span> <span class="toc-text">Create a new post</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Run_server"><span class="toc-number">1.2.</span> <span class="toc-text">Run server</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Generate_static_files"><span class="toc-number">1.3.</span> <span class="toc-text">Generate static files</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Deploy_to_remote_sites"><span class="toc-number">1.4.</span> <span class="toc-text">Deploy to remote sites</span></a></li></ol></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-主机的网络环境"><span class="toc-number">1.</span> <span class="toc-text">1.主机的网络环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-设置virualbox的网络连接方式"><span class="toc-number">2.</span> <span class="toc-text">2.设置virualbox的网络连接方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-修改虚拟机的网络配置"><span class="toc-number">3.</span> <span class="toc-text">3.修改虚拟机的网络配置</span></a></li></ol>
   </div>
 
 <div id="asidepart">
