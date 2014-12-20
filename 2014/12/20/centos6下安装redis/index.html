@@ -7,10 +7,18 @@
   <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8" />
 <meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88" />
   
-    <title>Hang&#39;s blog</title>
+    <title>centos6下安装redis | Hang&#39;s blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="hang">
+    
+    <meta name="description" content="安装ridis前，先安装gcc和tcl
+gcc的安装:
+yum install gcc-c++
+tcl的安装:
+yum install -y tcl
+安装完成后，开始安装redis，先下载redis的源码并编译
+wget http://download.redis.io/redis-stable.t">
     
     
     
@@ -68,129 +76,126 @@
 
     </header>
     <div id="container">
-      <div id="main">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2014/12/20/centos6下安装redis/" title="centos6下安装redis" itemprop="url">centos6下安装redis</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="www.lkh.im" title="hang">hang</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2014-12-20T06:46:11.000Z" itemprop="datePublished">12月 20 2014</time>
+    更新日期:<time datetime="2014-12-20T06:47:32.000Z" itemprop="dateModified">12月 20 2014</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+		</div>
+		
+		<p>安装ridis前，先安装gcc和tcl</p>
+<p>gcc的安装:</p>
+<pre><code><span class="comment">yum</span> <span class="comment">install</span> <span class="comment">gcc</span><span class="literal">-</span><span class="comment">c</span><span class="literal">+</span><span class="literal">+</span>
+</code></pre><p>tcl的安装:</p>
+<pre><code>yum install -<span class="keyword">y</span> <span class="keyword">tcl</span>
+</code></pre><p>安装完成后，开始安装redis，先下载redis的源码并编译</p>
+<pre><code><span class="title">wget</span> <span class="url">http://download.redis.io/redis-stable.tar.gz</span>
+
+tar xvzf redis-stable.tar.gz
+
+cd redis-stable
+
+make
+</code></pre><p>在make成功以后，会在src目录下多出一些可执行文件：redis-server，redis-cli等等。</p>
+<p>方便期间用cp命令复制到usr目录下运行。</p>
+<pre><code>cp redis-server <span class="regexp">/usr/</span>local<span class="regexp">/bin/</span>
+
+cp redis-cli <span class="regexp">/usr/</span>local<span class="regexp">/bin/</span>
+</code></pre><p>然后新建目录，存放配置文件</p>
+<pre><code><span class="built_in">mkdir</span> /etc/redis
+
+<span class="built_in">mkdir</span> /var/redis
+
+<span class="built_in">mkdir</span> /var/redis/<span class="built_in">log</span>
+
+<span class="built_in">mkdir</span> /var/redis/run
+
+<span class="built_in">mkdir</span> /var/redis/<span class="number">6379</span>
+</code></pre><p>在redis解压根目录中找到配置文件模板，复制到如下位置。</p>
+<pre><code><span class="keyword">cp</span> redis.<span class="keyword">conf</span> /etc/redis/<span class="number">6379</span>.<span class="keyword">conf</span>
+</code></pre><p>通过vim命令修改 /etc/redis/6379.conf</p>
+<pre><code>daemonize yes
+
+pidfile <span class="regexp">/var/</span>redis<span class="regexp">/run/</span>redis_6379.pid
+
+logfile <span class="regexp">/var/</span>redis<span class="regexp">/log/</span>redis_6379.log
+
+dir <span class="regexp">/var/</span>redis<span class="regexp">/6379</span>
+</code></pre><p>最后运行redis：<br>     $ redis-server /etc/redis/6379.conf    </p>
+<p>检查Redis是否在工作？<br>    $redis-cli</p>
+<p>这将打开一个Redis提示，如下所示：<br>    redis 127.0.0.1:6379&gt;</p>
+<p>上面的提示127.0.0.1是本机的IP地址，6379为Redis服务器运行的端口。<br>现在输入PING命令，如下所示。<br>    redis 127.0.0.1:6379&gt; ping<br>    PONG</p>
+<p>这说明你已经成功安装redis。</p>
+<p>参考:   <a href="http://www.cnblogs.com/haoxinyue/p/3620648.html" target="_blank" rel="external">http://www.cnblogs.com/haoxinyue/p/3620648.html</a></p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/redis，centos，cache/">redis，centos，cache</a>
+  </div>
 
 
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/2014/12/20/centos6下安装redis/" title="centos6下安装redis" itemprop="url">
-  
-      <time datetime="2014-12-20T06:46:11.000Z" itemprop="datePublished">12月 20 2014</time>
-    <h1 itemprop="name">centos6下安装redis</h1>
-    
-     
-           <p itemprop="description" >安装ridis前，先安装gcc和tcl
-gcc的安装:
-yum install gcc-c++
-tcl的安装:
-yum install -y tcl
-安装完成后，开始安装redis，先下载redis的源码并编译
-wget http://download.redis.io/redi</p>
-        
-    
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/2014/12/20/redis的5种数据类型及基本操作/" title="redis的5种数据类型及基本操作" itemprop="url">
-  
-      <time datetime="2014-12-20T06:36:17.000Z" itemprop="datePublished">12月 20 2014</time>
-    <h1 itemprop="name">redis的5种数据类型及基本操作</h1>
-    
-     
-           <p itemprop="description" >Redis支持5种类型的数据类型
-1.字符串
-Redis字符串是字节序列。Redis字符串是二进制安全的，这意味着他们有一个已知的长度没有任何特殊字符终止，所以你可以存储任何东西，512兆为上限。
-例子
-redis 127.0.0.1:6379&amp;gt; SET name &quot;han</p>
-        
-    
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/2014/12/20/virtualbox复制centos虚拟机/" title="virtualbox复制centos虚拟机" itemprop="url">
-  
-      <time datetime="2014-12-20T06:30:47.000Z" itemprop="datePublished">12月 20 2014</time>
-    <h1 itemprop="name">virtualbox复制centos虚拟机</h1>
-    
-     
-           <p itemprop="description" >右键选择选择已经装好的centos系统，点击复制，进去下图
-
-这里把名字取为centos 172.16.3.165 代表ip修改为165，并选择重新生成mac地址
-  
-
-选择完全复制
- 
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/缓存/">缓存</a>
+</div>
 
 
-复制完成后，启动centos 172.16.3.165 这台虚拟机
-3.进去虚拟机，查</p>
-        
-    
-  </a>
-</section>
 
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/2014/12/20/ubuntu12-04-在virtualbox下桥接-centos-虚拟机/" title="ubuntu12.04 在virtualbox下桥接 centos 虚拟机" itemprop="url">
-  
-      <time datetime="2014-12-20T06:08:06.000Z" itemprop="datePublished">12月 20 2014</time>
-    <h1 itemprop="name">ubuntu12.04 在virtualbox下桥接 centos 虚拟机</h1>
-    
-     
-           <p itemprop="description" >1.主机的网络环境
- 
-2.设置virualbox的网络连接方式
-选择桥接网络，并选择eth0
-3.修改虚拟机的网络配置
-修改/etc/sysconfig/network-script/ifcfg-eth0
-BOOTPROTO=static
-ONBOOT=yes
-TYPE=Eth</p>
-        
-    
-  </a>
-</section>
+<div class="article-share" id="share">
 
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/2014/12/20/jdbcTemplate/" title="jdbcTemplate" itemprop="url">
-  
-      <time datetime="2014-12-20T03:43:20.000Z" itemprop="datePublished">12月 20 2014</time>
-    <h1 itemprop="name">jdbcTemplate</h1>
-    
-     
-           <p itemprop="description" >Jdbctemplate 的基本使用
-依赖：
-&amp;lt;dependencies&amp;gt;
-    &amp;lt;dependency&amp;gt;
-        &amp;lt;groupId&amp;gt;org.springframework&amp;lt;/groupId&amp;gt;
-        &amp;lt;ar</p>
-        
-    
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/2014/12/19/hello-world/" title="Hello World" itemprop="url">
-  
-      <time datetime="2014-12-19T08:15:22.000Z" itemprop="datePublished">12月 19 2014</time>
-    <h1 itemprop="name">Hello World</h1>
-    
-     
-           <p itemprop="description" >Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the </p>
-        
-    
-  </a>
-</section>
-
+  <div data-url="www.lkh.im/2014/12/20/centos6下安装redis/" data-title="centos6下安装redis | Hang&#39;s blog" data-tsina="null" class="share clearfix">
+  </div>
 
 </div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2014/12/20/redis的5种数据类型及基本操作/"  title="redis的5种数据类型及基本操作">
+ <strong>NEXT:</strong><br/> 
+ <span>redis的5种数据类型及基本操作
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+</div>  
       <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  
+  </div>
 
 <div id="asidepart">
 <div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
@@ -272,8 +277,8 @@ TYPE=Eth</p>
 
 </aside>
 </div>
-  </div>
-  <footer><div id="footer" >
+    </div>
+    <footer><div id="footer" >
     
             <p class="copyright"> © 2014 
 		
@@ -309,6 +314,8 @@ $(document).ready(function(){
       m.removeClass('moveMain');
       a.css('display', 'block').removeClass('fadeOut');
       o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
         
     }
   });
@@ -328,7 +335,79 @@ $(document).ready(function(){
 });
 </script>
 
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
 
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"null"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
 
 
 
@@ -416,5 +495,5 @@ ga('send', 'pageview');
 
 
   </body>
- </html>
+</html>
 
