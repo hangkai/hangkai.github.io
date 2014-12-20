@@ -12,13 +12,13 @@
     
     <meta name="author" content="hang">
     
-    <meta name="description" content="安装ridis前，先安装gcc和tcl
-gcc的安装:
-yum install gcc-c++
+    <meta name="description" content="nstall gcc-c++
 tcl的安装:
 yum install -y tcl
 安装完成后，开始安装redis，先下载redis的源码并编译
-wget http://download.redis.io/redis-stable.t">
+wget http://download.redis.io/redis-stable.tar.gz
+
+tar xvzf redis-stable.tar.">
     
     
     
@@ -89,7 +89,7 @@ wget http://download.redis.io/redis-stable.t">
     </p>
   <p class="article-time">
     <time datetime="2014-12-20T06:46:11.000Z" itemprop="datePublished">12月 20 2014</time>
-    更新日期:<time datetime="2014-12-20T06:47:32.000Z" itemprop="dateModified">12月 20 2014</time>
+    更新日期:<time datetime="2014-12-20T06:52:47.000Z" itemprop="dateModified">12月 20 2014</time>
     
   </p>
 </header>
@@ -101,10 +101,8 @@ wget http://download.redis.io/redis-stable.t">
 		
 		</div>
 		
-		<p>安装ridis前，先安装gcc和tcl</p>
-<p>gcc的安装:</p>
-<pre><code><span class="comment">yum</span> <span class="comment">install</span> <span class="comment">gcc</span><span class="literal">-</span><span class="comment">c</span><span class="literal">+</span><span class="literal">+</span>
-</code></pre><p>tcl的安装:</p>
+		<p>nstall gcc-c++</p>
+<p>tcl的安装:</p>
 <pre><code>yum install -<span class="keyword">y</span> <span class="keyword">tcl</span>
 </code></pre><p>安装完成后，开始安装redis，先下载redis的源码并编译</p>
 <pre><code><span class="title">wget</span> <span class="url">http://download.redis.io/redis-stable.tar.gz</span>
@@ -132,18 +130,23 @@ cp redis-cli <span class="regexp">/usr/</span>local<span class="regexp">/bin/</s
 </code></pre><p>在redis解压根目录中找到配置文件模板，复制到如下位置。</p>
 <pre><code><span class="keyword">cp</span> redis.<span class="keyword">conf</span> /etc/redis/<span class="number">6379</span>.<span class="keyword">conf</span>
 </code></pre><p>通过vim命令修改 /etc/redis/6379.conf</p>
-<pre><code>daemonize yes
+<pre><code>    daemonize yes
 
-pidfile <span class="regexp">/var/</span>redis<span class="regexp">/run/</span>redis_6379.pid
+    pidfile <span class="regexp">/var/</span>redis<span class="regexp">/run/</span>redis_6379.pid
 
-logfile <span class="regexp">/var/</span>redis<span class="regexp">/log/</span>redis_6379.log
+    logfile <span class="regexp">/var/</span>redis<span class="regexp">/log/</span>redis_6379.log
 
-dir <span class="regexp">/var/</span>redis<span class="regexp">/6379</span>
-</code></pre><p>最后运行redis：<br>     $ redis-server /etc/redis/6379.conf    </p>
-<p>检查Redis是否在工作？<br>    $redis-cli</p>
-<p>这将打开一个Redis提示，如下所示：<br>    redis 127.0.0.1:6379&gt;</p>
-<p>上面的提示127.0.0.1是本机的IP地址，6379为Redis服务器运行的端口。<br>现在输入PING命令，如下所示。<br>    redis 127.0.0.1:6379&gt; ping<br>    PONG</p>
-<p>这说明你已经成功安装redis。</p>
+    dir <span class="regexp">/var/</span>redis<span class="regexp">/6379</span>
+</code></pre><p>最后运行redis：       </p>
+<pre><code>$ redis-server /etc/redis/<span class="number">6379</span>.<span class="keyword">conf</span> 
+</code></pre><p>检查Redis是否在工作？</p>
+<pre><code><span class="variable">$redis</span>-cli
+</code></pre><p>这将打开一个Redis提示，如下所示：</p>
+<pre><code><span class="title">redis</span> <span class="number">127.0.0.1:6379</span>&gt;
+</code></pre><p>上面的提示127.0.0.1是本机的IP地址，6379为Redis服务器运行的端口。<br>现在输入PING命令，如下所示。</p>
+<pre><code>    <span class="title">redis</span> <span class="number">127.0.0.1:6379</span>&gt; ping
+    PONG
+</code></pre><p>这说明你已经成功安装redis。</p>
 <p>参考:   <a href="http://www.cnblogs.com/haoxinyue/p/3620648.html" target="_blank" rel="external">http://www.cnblogs.com/haoxinyue/p/3620648.html</a></p>
   
 	</div>
