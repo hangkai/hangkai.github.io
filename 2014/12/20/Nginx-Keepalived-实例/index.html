@@ -85,7 +85,7 @@ Nginx_VIP_TP: 192.168.1.108 网站的 VIP 地址(虚拟 IP)
     </p>
   <p class="article-time">
     <time datetime="2014-12-20T06:59:40.000Z" itemprop="datePublished">12月 20 2014</time>
-    更新日期:<time datetime="2014-12-20T07:02:07.000Z" itemprop="dateModified">12月 20 2014</time>
+    更新日期:<time datetime="2014-12-20T07:08:27.000Z" itemprop="dateModified">12月 20 2014</time>
     
   </p>
 </header>
@@ -94,7 +94,7 @@ Nginx_VIP_TP: 192.168.1.108 网站的 VIP 地址(虚拟 IP)
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#安装_Nginx_(省略)"><span class="toc-number">1.</span> <span class="toc-text">安装 Nginx (省略)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Keepalived_安装"><span class="toc-number">2.</span> <span class="toc-text">Keepalived 安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Keepalived_configuration"><span class="toc-number">3.</span> <span class="toc-text">Keepalived configuration</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#此处是主_Nginx_的_IP_地址-"><span class="toc-number"></span> <span class="toc-text">此处是主 Nginx 的 IP 地址.</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#该机的_priority(优先)_为_100"><span class="toc-number"></span> <span class="toc-text">该机的 priority(优先) 为 100</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#此处是备_Nginx_的_IP_地址-"><span class="toc-number"></span> <span class="toc-text">此处是备 Nginx 的 IP 地址.</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#该机的_priority(优先)_为_99"><span class="toc-number"></span> <span class="toc-text">该机的 priority(优先) 为 99</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#!/bin/bash"><span class="toc-number"></span> <span class="toc-text">!/bin/bash</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#测试:"><span class="toc-number">1.</span> <span class="toc-text">测试:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#负载均衡"><span class="toc-number">2.</span> <span class="toc-text">负载均衡</span></a></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#安装_Nginx_(省略)"><span class="toc-number">1.</span> <span class="toc-text">安装 Nginx (省略)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Keepalived_安装"><span class="toc-number">2.</span> <span class="toc-text">Keepalived 安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Keepalived_configuration"><span class="toc-number">3.</span> <span class="toc-text">Keepalived configuration</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#测试:"><span class="toc-number">4.</span> <span class="toc-text">测试:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#负载均衡"><span class="toc-number">5.</span> <span class="toc-text">负载均衡</span></a></li></ol>
 		</div>
 		
 		<p>Nginx_Master: 192.168.1.103 提供负载均衡<br>Nginx_BackUp: 192.168.1.104 负载均衡备机</p>
@@ -121,38 +121,12 @@ Nginx_VIP_TP: 192.168.1.108 网站的 VIP 地址(虚拟 IP)
 <p>vi /etc/keepalived/keepalived.conf</p>
 <p>! Configuration File for keepalived</p>
 <p>global_defs {<br>   notification_email {<br>     sunyu@easymobi.cn<br>     wuxuegang.123@163.com<br>   }<br>   notification_email_from pub@easymobi.cn<br>   smtp_server 127.0.0.1<br>   smtp_connect_timeout 30<br>   router_id LVS_DEVEL<br>}</p>
-<p>vrrp_instance VI_1 {<br>    state MASTER<br>    interface eth0<br>    virtual_router_id 51</p>
-<h1 id="此处是主_Nginx_的_IP_地址-">此处是主 Nginx 的 IP 地址.</h1>
-<pre><code><span class="title">mcast_src_ip</span> <span class="number">192.168.1.103</span>
-</code></pre><h1 id="该机的_priority(优先)_为_100">该机的 priority(优先) 为 100</h1>
-<pre><code>priority <span class="number">100</span>
-advert_int <span class="number">1</span>
-authentication <span class="list">{
-    auth_type PASS
-    auth_pass 1111222
-}</span>
-virtual_ipaddress <span class="list">{
-   192.168.1.108
-}</span>
-</code></pre><p>}</p>
+<p>vrrp_instance VI_1 {<br>    state MASTER<br>    interface eth0<br>    virtual_router_id 51<br>   <em># 此处是主 Nginx 的 IP 地址.</em><br>    mcast_src_ip 192.168.1.103<br>   <em># 该机的 priority(优先) 为 100</em><br>    priority 100<br>    advert_int 1<br>    authentication {<br>        auth_type PASS<br>        auth_pass 1111222<br>    }<br>    virtual_ipaddress {<br>       192.168.1.108<br>    }<br>}</p>
 <p>前面的结构那里已经规定好了 VIP 和 主备机的 IP, 所以这里按上面的填。</p>
 <p>备机的配置文件:</p>
 <p>! Configuration File for keepalived</p>
 <p>global_defs {<br>   notification_email {<br>     sunyu@easymobi.cn<br>     wuxuegang.123@163.com<br>   }<br>   notification_email_from pub@easymobi.cn<br>   smtp_server 127.0.0.1<br>   smtp_connect_timeout 30<br>   router_id LVS_DEVEL<br>}</p>
-<p>vrrp_instance VI_1 {<br>    state SLAVER<br>    interface eth0<br>    virtual_router_id 51</p>
-<h1 id="此处是备_Nginx_的_IP_地址-">此处是备 Nginx 的 IP 地址.</h1>
-<pre><code><span class="title">mcast_src_ip</span> <span class="number">192.168.1.104</span>
-</code></pre><h1 id="该机的_priority(优先)_为_99">该机的 priority(优先) 为 99</h1>
-<pre><code>priority <span class="number">99</span>
-advert_int <span class="number">1</span>
-authentication <span class="list">{
-    auth_type PASS
-    auth_pass 1111222
-}</span>
-virtual_ipaddress <span class="list">{
-   192.168.1.108
-}</span>
-</code></pre><p>}</p>
+<p>vrrp_instance VI_1 {<br>    state SLAVER<br>    interface eth0<br>    virtual_router_id 51<br>   <em># 此处是备 Nginx 的 IP 地址.</em><br>    mcast_src_ip 192.168.1.104<br>   <em># 该机的 priority(优先) 为 99</em><br>    priority 99<br>    advert_int 1<br>    authentication {<br>        auth_type PASS<br>        auth_pass 1111222<br>    }<br>    virtual_ipaddress {<br>       192.168.1.108<br>    }<br>}</p>
 <p>这时候 ping 192.168.1.108 是不通的.</p>
 <p>然后在两台机器上分别启动 keepalived 服务</p>
 <p>这时候再 ping 192.168.1.108 .通了.<br>实际上这时候 108 是被绑到主机上的。在主机上：<br>查看系统日志:<br>tailf /var/log/messages<br>May 29 18:32:16 localhost Keepalived_vrrp[27731]: Opening file ‘/etc/keepalived/keepalived.conf’.<br>May 29 18:32:16 localhost Keepalived_vrrp[27731]: Configuration is using : 62906 Bytes<br>May 29 18:32:16 localhost Keepalived_vrrp[27731]: Using LinkWatch kernel netlink reflector…<br>May 29 18:32:16 localhost Keepalived_healthcheckers[27729]: Using LinkWatch kernel netlink reflector…<br>May 29 18:32:16 localhost Keepalived_vrrp[27731]: VRRP sockpool: [ifindex(2), proto(112), fd(11,12)]<br>May 29 18:32:17 localhost Keepalived_vrrp[27731]: VRRP_Instance(VI_1) Transition to MASTER STATE<br>May 29 18:32:18 localhost Keepalived_vrrp[27731]: VRRP_Instance(VI_1) Entering MASTER STATE<br>May 29 18:32:18 localhost Keepalived_vrrp[27731]: VRRP_Instance(VI_1) setting protocol VIPs.<br>May 29 18:32:18 localhost Keepalived_vrrp[27731]: VRRP_Instance(VI_1) Sending gratuitous ARPs on eth0 for 192.168.1.108<br>May 29 18:32:18 localhost Keepalived_healthcheckers[27729]: Netlink reflector reports IP 192.168.1.108 added</p>
@@ -163,14 +137,13 @@ virtual_ipaddress <span class="list">{
 <p>[root@localhost ~]# tcpdump vrrp<br>tcpdump: verbose output suppressed, use -v or -vv for full protocol decode<br>listening on eth0, link-type EN10MB (Ethernet), capture size 65535 bytes<br>13:38:27.797982 IP htuidc.bgp.ip &gt; vrrp.mcast.net: VRRPv2, Advertisement, vrid 51, prio 100, authtype simple, intvl 1s, length 20<br>13:38:28.794693 IP htuidc.bgp.ip &gt; vrrp.mcast.net: VRRPv2, Advertisement, vrid 51, prio 100, authtype simple, intvl 1s, length 20<br>13:38:29.794518 IP htuidc.bgp.ip &gt; vrrp.mcast.net: VRRPv2, Advertisement, vrid 51, prio 100, authtype simple, intvl 1s, length 20<br>13:38:30.798581 IP htuidc.bgp.ip &gt; vrrp.mcast.net: VRRPv2, Advertisement, vrid 51, prio 100, authtype simple, intvl 1s, length 20<br>13:38:31.795902 IP htuidc.bgp.ip &gt; vrrp.mcast.net: VRRPv2, Advertisement, vrid 51, prio 100, authtype simple, intvl 1s, length 20<br>13:38:32.804050 IP htuidc.bgp.ip &gt; vrrp.mcast.net: VRRPv2, Advertisement, vrid 51, prio 100, authtype simple, intvl 1s, length 20<br>13:38:33.801191 IP htuidc.bgp.ip &gt; vrrp.mcast.net: VRRPv2, Advertisement, vrid 51, prio 100, authtype simple, intvl 1s, length 20<br>13:38:34.798793 IP htuidc.bgp.ip &gt; vrrp.mcast.net: VRRPv2, Advertisement, vrid 51, prio 100, authtype simple, intvl 1s, length 20</p>
 <p>这样，一个 Nginx + Keepalived 的架构就完成了。</p>
 <p>监控和主备切换<br>接下来可以完善一下，加上实时监控，如果发现负载均衡的 Nginx 出现问题，就将该机器上的 Keepalived 服务停掉。<br>nginx_check.sh:</p>
-<h1 id="!/bin/bash">!/bin/bash</h1>
-<p>while :<br>do<br>nginxpid = ‘ps -C nginx —no-header | wc -l’<br>if[ $nginxpid -eq 0 ];then<br>service nginx start<br>sleep 3<br>nginxpid = ‘ps -C nginx —no-header | wc -l’<br>echo $nginxpid<br>if[ $nginxpid -eq 0 ];then<br>service keepalived stop<br>fi<br>fi<br>sleep 3<br>done</p>
+<p><em>#!/bin/bash</em><br>while :<br>do<br>nginxpid = ‘ps -C nginx —no-header | wc -l’<br>if[ $nginxpid -eq 0 ];then<br>service nginx start<br>sleep 3<br>nginxpid = ‘ps -C nginx —no-header | wc -l’<br>echo $nginxpid<br>if[ $nginxpid -eq 0 ];then<br>service keepalived stop<br>fi<br>fi<br>sleep 3<br>done</p>
 <p>然后让该脚本一直在后台运行:<br>nohup /etc/nginx_check.sh<br>或者将它添加成服务，让它开机自启动:<br><a href="http://blog.sina.com.cn/s/blog_5f54f0be0101b3bs.html" target="_blank" rel="external">http://blog.sina.com.cn/s/blog_5f54f0be0101b3bs.html</a></p>
 <h2 id="测试:">测试:</h2>
 <p>在两台机器的 web 服务器上分别放一个 index.html, 里面内容分别是自己机器的IP.<br>通过VIP访问：<br><a href="http://192.168.1.108/index.html" target="_blank" rel="external">http://192.168.1.108/index.html</a> 发现显示的是主机的IP.<br>此时，关掉主机的 nginx, 这时候由于上面的监控脚本。主机的 keepalived 也会关闭。这时候再访问上面地址，发现显示的是备机的IP。可见，切换成功。</p>
 <h2 id="负载均衡">负载均衡</h2>
 <p><a href="http://blog.sina.com.cn/s/blog_5f54f0be0100zvf5.html" target="_blank" rel="external">http://blog.sina.com.cn/s/blog_5f54f0be0100zvf5.html</a><br>通过 ip_hash 实现会话保持</p>
-<p>原文地址:  <a href="http://blog.sina.com.cn/s/blog_5f54f0be0101eyff.html" target="_blank" rel="external">http://blog.sina.com.cn/s/blog_5f54f0be0101eyff.html</a></p>
+<p>原文地址:<a href="http://blog.sina.com.cn/s/blog_5f54f0be0101eyff.html" target="_blank" rel="external">http://blog.sina.com.cn/s/blog_5f54f0be0101eyff.html</a></p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -220,7 +193,7 @@ virtual_ipaddress <span class="list">{
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#安装_Nginx_(省略)"><span class="toc-number">1.</span> <span class="toc-text">安装 Nginx (省略)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Keepalived_安装"><span class="toc-number">2.</span> <span class="toc-text">Keepalived 安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Keepalived_configuration"><span class="toc-number">3.</span> <span class="toc-text">Keepalived configuration</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#此处是主_Nginx_的_IP_地址-"><span class="toc-number"></span> <span class="toc-text">此处是主 Nginx 的 IP 地址.</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#该机的_priority(优先)_为_100"><span class="toc-number"></span> <span class="toc-text">该机的 priority(优先) 为 100</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#此处是备_Nginx_的_IP_地址-"><span class="toc-number"></span> <span class="toc-text">此处是备 Nginx 的 IP 地址.</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#该机的_priority(优先)_为_99"><span class="toc-number"></span> <span class="toc-text">该机的 priority(优先) 为 99</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#!/bin/bash"><span class="toc-number"></span> <span class="toc-text">!/bin/bash</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#测试:"><span class="toc-number">1.</span> <span class="toc-text">测试:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#负载均衡"><span class="toc-number">2.</span> <span class="toc-text">负载均衡</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#安装_Nginx_(省略)"><span class="toc-number">1.</span> <span class="toc-text">安装 Nginx (省略)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Keepalived_安装"><span class="toc-number">2.</span> <span class="toc-text">Keepalived 安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Keepalived_configuration"><span class="toc-number">3.</span> <span class="toc-text">Keepalived configuration</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#测试:"><span class="toc-number">4.</span> <span class="toc-text">测试:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#负载均衡"><span class="toc-number">5.</span> <span class="toc-text">负载均衡</span></a></li></ol>
   </div>
 
 <div id="asidepart">
