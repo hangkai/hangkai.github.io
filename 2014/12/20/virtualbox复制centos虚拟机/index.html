@@ -7,10 +7,22 @@
   <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8" />
 <meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88" />
   
-    <title>Hang&#39;s blog</title>
+    <title>virtualbox复制centos虚拟机 | Hang&#39;s blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="hang">
+    
+    <meta name="description" content="右键选择选择已经装好的centos系统，点击复制，进去下图
+
+这里把名字取为centos 172.16.3.165 代表ip修改为165，并选择重新生成mac地址
+  
+
+选择完全复制
+ 
+
+
+复制完成后，启动centos 172.16.3.165 这台虚拟机
+3.进去虚拟机，查看虚拟机的网络环境 ">
     
     
     
@@ -68,91 +80,113 @@
 
     </header>
     <div id="container">
-      <div id="main">
-
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/2014/12/20/virtualbox复制centos虚拟机/" title="virtualbox复制centos虚拟机" itemprop="url">
-  
-      <time datetime="2014-12-20T06:30:47.000Z" itemprop="datePublished">12月 20 2014</time>
-    <h1 itemprop="name">virtualbox复制centos虚拟机</h1>
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
     
-     
-           <p itemprop="description" >右键选择选择已经装好的centos系统，点击复制，进去下图
-
-这里把名字取为centos 172.16.3.165 代表ip修改为165，并选择重新生成mac地址
-  
-
-选择完全复制
- 
-
-
-复制完成后，启动centos 172.16.3.165 这台虚拟机
-3.进去虚拟机，查</p>
-        
+      <a href="/2014/12/20/virtualbox复制centos虚拟机/" title="virtualbox复制centos虚拟机" itemprop="url">virtualbox复制centos虚拟机</a>
+  </h1>
+  <p class="article-author">By
     
-  </a>
-</section>
+      <a href="www.lkh.im" title="hang">hang</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2014-12-20T06:30:47.000Z" itemprop="datePublished">12月 20 2014</time>
+    更新日期:<time datetime="2014-12-20T06:31:59.000Z" itemprop="dateModified">12月 20 2014</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		
+		</div>
+		
+		<ol>
+<li>右键选择选择已经装好的centos系统，点击复制，进去下图</li>
+</ol>
+<p>这里把名字取为centos 172.16.3.165 代表ip修改为165，并选择重新生成mac地址</p>
+<p> <img src="/images/2014/12/20/6.jpeg" alt=""> </p>
+<ol>
+<li><p>选择完全复制</p>
+<p><img src="/images/2014/12/20/7.jpeg" alt=""> </p>
+</li>
+</ol>
+<p>复制完成后，启动centos 172.16.3.165 这台虚拟机</p>
+<p>3.进去虚拟机，查看虚拟机的网络环境 输入ifconfig</p>
+<p> <img src="/images/2014/12/20/8.jpeg" alt="">  </p>
+<p>由上图看出目前的ip是155。需要注意的是，这里的mac地址是旧的虚拟机的地址，需要改成virtualbox分配的新mac地址，具体操作如下</p>
+<p>4.把mac地址改成virtualbox分配的新的mac地址</p>
+<p>先删除/etc/udev/rules.d/70-persistent-net.rules文件,重启后会自动生成</p>
+<p>修改/etc/sysconfig/network-script/ifcfg-eth0</p>
+<p>BOOTPROTO=static</p>
+<p>ONBOOT=yes</p>
+<p>TYPE=Ethernet</p>
+<p>IPADDR=172.16.3.165      //虚拟机的ip</p>
+<p>NETMASK=255.255.255.0  //子网掩码</p>
+<p>GATEWAY=172.16.3.254   //网关</p>
+<p>HWADDR=08：00：27：CC:E3：79  //MAC地址 </p>
+<p> 这里是mac地址可以在右键(virtualbox的虚拟机—》设置—》网络)查询到</p>
+<p>如下图红色部分：</p>
+<p> <img src="/images/2014/12/20/9.jpeg" alt=""> </p>
+<p>然后需要添加dns</p>
+<p>vi /etc/resolv.conf</p>
+<p>nameserver 202.96.128.86 </p>
+<p>最后reboot</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
 
-  <section class="post" itemscope itemprop="blogPost">
+  <div class="article-tags">
   
-    <a href="/2014/12/20/ubuntu12-04-在virtualbox下桥接-centos-虚拟机/" title="ubuntu12.04 在virtualbox下桥接 centos 虚拟机" itemprop="url">
-  
-      <time datetime="2014-12-20T06:08:06.000Z" itemprop="datePublished">12月 20 2014</time>
-    <h1 itemprop="name">ubuntu12.04 在virtualbox下桥接 centos 虚拟机</h1>
-    
-     
-           <p itemprop="description" >1.主机的网络环境
- 
-2.设置virualbox的网络连接方式
-选择桥接网络，并选择eth0
-3.修改虚拟机的网络配置
-修改/etc/sysconfig/network-script/ifcfg-eth0
-BOOTPROTO=static
-ONBOOT=yes
-TYPE=Eth</p>
-        
-    
-  </a>
-</section>
+  <span></span> <a href="/tags/虚拟机，centos/">虚拟机，centos</a>
+  </div>
 
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/2014/12/20/jdbcTemplate/" title="jdbcTemplate" itemprop="url">
-  
-      <time datetime="2014-12-20T03:43:20.000Z" itemprop="datePublished">12月 20 2014</time>
-    <h1 itemprop="name">jdbcTemplate</h1>
-    
-     
-           <p itemprop="description" >Jdbctemplate 的基本使用
-依赖：
-&amp;lt;dependencies&amp;gt;
-    &amp;lt;dependency&amp;gt;
-        &amp;lt;groupId&amp;gt;org.springframework&amp;lt;/groupId&amp;gt;
-        &amp;lt;ar</p>
-        
-    
-  </a>
-</section>
 
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/2014/12/19/hello-world/" title="Hello World" itemprop="url">
-  
-      <time datetime="2014-12-19T08:15:22.000Z" itemprop="datePublished">12月 19 2014</time>
-    <h1 itemprop="name">Hello World</h1>
-    
-     
-           <p itemprop="description" >Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the </p>
-        
-    
-  </a>
-</section>
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/运维/">运维</a>
+</div>
 
+
+
+<div class="article-share" id="share">
+
+  <div data-url="www.lkh.im/2014/12/20/virtualbox复制centos虚拟机/" data-title="virtualbox复制centos虚拟机 | Hang&#39;s blog" data-tsina="null" class="share clearfix">
+  </div>
 
 </div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2014/12/20/ubuntu12-04-在virtualbox下桥接-centos-虚拟机/"  title="ubuntu12.04 在virtualbox下桥接 centos 虚拟机">
+ <strong>NEXT:</strong><br/> 
+ <span>ubuntu12.04 在virtualbox下桥接 centos 虚拟机
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+<section class="comment">
+	<div class="ds-thread"></div>
+</section>
+
+</div>  
       <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  
+  </div>
 
 <div id="asidepart">
 <div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
@@ -224,8 +258,8 @@ TYPE=Eth</p>
 
 </aside>
 </div>
-  </div>
-  <footer><div id="footer" >
+    </div>
+    <footer><div id="footer" >
     
             <p class="copyright"> © 2014 
 		
@@ -261,6 +295,8 @@ $(document).ready(function(){
       m.removeClass('moveMain');
       a.css('display', 'block').removeClass('fadeOut');
       o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
         
     }
   });
@@ -280,7 +316,79 @@ $(document).ready(function(){
 });
 </script>
 
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
 
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"null"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = '//static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script> 
 
 
 
@@ -368,5 +476,5 @@ ga('send', 'pageview');
 
 
   </body>
- </html>
+</html>
 
