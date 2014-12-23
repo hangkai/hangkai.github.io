@@ -1,0 +1,667 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+    
+  <url>
+    <loc>www.lkh.im/2014/12/20/centos6%E4%B8%8B%E5%AE%89%E8%A3%85redis/</loc>
+    <lastmod>2014-12-20T06:54:19.000Z</lastmod>
+    <data>
+        <display>
+        <title>centos6下安装redis</title>
+        <pubTime>2014-12-20T06:46:11.000Z</pubTime>
+        
+        <tag>redis，centos，cache </tag>
+         
+         <content><![CDATA[<p>安装ridis前，先安装gcc和tcl</p>
+<p>gcc的安装:</p>
+<pre><code><span class="comment">yum</span> <span class="comment">install</span> <span class="comment">gcc</span><span class="literal">-</span><span class="comment">c</span><span class="literal">+</span><span class="literal">+</span>
+</code></pre><p>tcl的安装:</p>
+<pre><code>yum install -<span class="keyword">y</span> <span class="keyword">tcl</span>
+</code></pre><p>安装完成后，开始安装redis，先下载redis的源码并编译</p>
+<pre><code><span class="title">wget</span> <span class="url">http://download.redis.io/redis-stable.tar.gz</span>
+
+tar xvzf redis-stable.tar.gz
+
+cd redis-stable
+
+make
+</code></pre><p>在make成功以后，会在src目录下多出一些可执行文件：redis-server，redis-cli等等。</p>
+<p>方便期间用cp命令复制到usr目录下运行。</p>
+<pre><code>cp redis-server <span class="regexp">/usr/</span>local<span class="regexp">/bin/</span>
+
+cp redis-cli <span class="regexp">/usr/</span>local<span class="regexp">/bin/</span>
+</code></pre><p>然后新建目录，存放配置文件</p>
+<pre><code><span class="built_in">mkdir</span> /etc/redis
+
+<span class="built_in">mkdir</span> /var/redis
+
+<span class="built_in">mkdir</span> /var/redis/<span class="built_in">log</span>
+
+<span class="built_in">mkdir</span> /var/redis/run
+
+<span class="built_in">mkdir</span> /var/redis/<span class="number">6379</span>
+</code></pre><p>在redis解压根目录中找到配置文件模板，复制到如下位置。</p>
+<pre><code><span class="keyword">cp</span> redis.<span class="keyword">conf</span> /etc/redis/<span class="number">6379</span>.<span class="keyword">conf</span>
+</code></pre><p>通过vim命令修改 /etc/redis/6379.conf</p>
+<pre><code>    daemonize yes
+
+    pidfile <span class="regexp">/var/</span>redis<span class="regexp">/run/</span>redis_6379.pid
+
+    logfile <span class="regexp">/var/</span>redis<span class="regexp">/log/</span>redis_6379.log
+
+    dir <span class="regexp">/var/</span>redis<span class="regexp">/6379</span>
+</code></pre><p>最后运行redis：       </p>
+<pre><code>$ redis-server /etc/redis/<span class="number">6379</span>.<span class="keyword">conf</span> 
+</code></pre><p>检查Redis是否在工作？</p>
+<pre><code><span class="variable">$redis</span>-cli
+</code></pre><p>这将打开一个Redis提示，如下所示：</p>
+<pre><code><span class="title">redis</span> <span class="number">127.0.0.1:6379</span>&gt;
+</code></pre><p>上面的提示127.0.0.1是本机的IP地址，6379为Redis服务器运行的端口。<br>现在输入PING命令，如下所示。</p>
+<pre><code>    <span class="title">redis</span> <span class="number">127.0.0.1:6379</span>&gt; ping
+    PONG
+</code></pre><p>这说明你已经成功安装redis。</p>
+<p>参考:   <a href="http://www.cnblogs.com/haoxinyue/p/3620648.html" target="_blank" rel="external">http://www.cnblogs.com/haoxinyue/p/3620648.html</a></p>
+]]></content>
+         
+         
+           
+             
+              <breadCrumb title="缓存" url="www.lkh.im/categories/%E7%BC%93%E5%AD%98/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>www.lkh.im/2014/12/20/redis%E7%9A%845%E7%A7%8D%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E5%8F%8A%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C/</loc>
+    <lastmod>2014-12-20T06:40:15.000Z</lastmod>
+    <data>
+        <display>
+        <title>redis的5种数据类型及基本操作</title>
+        <pubTime>2014-12-20T06:36:17.000Z</pubTime>
+        
+        <tag>redis，缓存，cache </tag>
+         
+         <content><![CDATA[<h2 id="Redis支持5种类型的数据类型">Redis支持5种类型的数据类型</h2>
+<h1 id="1-字符串">1.字符串</h1>
+<p>Redis字符串是字节序列。Redis字符串是二进制安全的，这意味着他们有一个已知的长度没有任何特殊字符终止，所以你可以存储任何东西，512兆为上限。</p>
+<p>例子</p>
+<pre><code><span class="input"><span class="prompt">redis 127.0.0.1:6379&gt;</span> <span class="constant">SET</span> name <span class="string">"hang"</span></span>
+<span class="input"><span class="prompt">
+OK
+
+redis 127.0.0.1:6379&gt;</span> <span class="constant">GET</span> name</span>
+
+<span class="string">"hang"</span>
+</code></pre><h1 id="2-哈希">2.哈希</h1>
+<p>Redis的哈希是键值对的集合。 Redis的哈希值是字符串字段和字符串值之间的映射，因此它们被用来表示对象</p>
+<p>例子</p>
+<pre><code><span class="input"><span class="prompt">redis 127.0.0.1:6379&gt;</span> <span class="constant">HMSET</span> <span class="symbol">user:</span><span class="number">1</span> username hang password hang points <span class="number">200</span></span>
+<span class="input"><span class="prompt">
+OK
+
+redis 127.0.0.1:6379&gt;</span> <span class="constant">HGETALL</span> <span class="symbol">user:</span><span class="number">1</span></span>
+
+<span class="number">1</span>) <span class="string">"username"</span>
+
+<span class="number">2</span>) <span class="string">"hang"</span>
+
+<span class="number">3</span>) <span class="string">"password"</span>
+
+<span class="number">4</span>) <span class="string">"hang"</span>
+
+<span class="number">5</span>) <span class="string">"points"</span>
+
+<span class="number">6</span>) <span class="string">"200"</span>
+</code></pre><p>在上面的例子中的哈希数据类型，用于存储其中包含的用户的基本信息用户的对象。这里HMSET，HEGTALL用户命令user:1是键。可以理解成user类id=1的实例</p>
+<h1 id="3-列表">3.列表</h1>
+<p>Redis的列表是简单的字符串列表，排序插入顺序。您可以添加元素到Redis的列表的头部或尾部。</p>
+<p>例子</p>
+<pre><code><span class="input"><span class="prompt">redis 127.0.0.1:6379&gt;</span> lpush tutoriallist redis</span>
+<span class="input"><span class="prompt">
+(integer) 1
+
+redis 127.0.0.1:6379&gt;</span> lpush tutoriallist mongodb</span>
+<span class="input"><span class="prompt">
+(integer) 2
+
+redis 127.0.0.1:6379&gt;</span> lpush tutoriallist rabitmq</span>
+<span class="input"><span class="prompt">
+(integer) 3
+
+redis 127.0.0.1:6379&gt;</span> lrange tutoriallist <span class="number">0</span> <span class="number">10</span></span>
+
+<span class="number">1</span>) <span class="string">"rabitmq"</span>
+
+<span class="number">2</span>) <span class="string">"mongodb"</span>
+
+<span class="number">3</span>) <span class="string">"redis"</span>
+</code></pre><p>列表的最大长度为 232 - 1 元素（4294967295，每个列表中可容纳超过4十亿的元素），改类型可以理解为java中的list集合</p>
+<h1 id="4-集合">4.集合</h1>
+<p>Redis的集合是字符串的无序集合。在Redis您可以添加，删除和测试文件是否存在，在成员O（1）的时间复杂度。</p>
+<p>例子</p>
+<pre><code><span class="input"><span class="prompt">redis 127.0.0.1:6379&gt;</span> sadd tutoriallist2 redis</span>
+<span class="input"><span class="prompt">
+(integer) 1
+
+redis 127.0.0.1:6379&gt;</span> sadd tutoriallist2 mongodb</span>
+<span class="input"><span class="prompt">
+(integer) 1
+
+redis 127.0.0.1:6379&gt;</span> sadd tutoriallist2 rabitmq</span>
+<span class="input"><span class="prompt">
+(integer) 1
+
+redis 127.0.0.1:6379&gt;</span> sadd tutoriallist2 rabitmq</span>
+<span class="input"><span class="prompt">
+(integer) 0
+
+redis 127.0.0.1:6379&gt;</span> smembers tutoriallist2 </span>
+
+<span class="number">1</span>) <span class="string">"rabitmq"</span>
+
+<span class="number">2</span>) <span class="string">"mongodb"</span>
+
+<span class="number">3</span>) <span class="string">"redis"</span>
+</code></pre><p>注意：在上面的例子中rabitmq集合添加加两次，但由于集合元素具有唯一属性，该类型可以理解为java中的hashset集合</p>
+<p>集合中的元素最大数量为 232 - 1 （4294967295，可容纳超过4十亿元素）。</p>
+<h1 id="5-_Redis有序集">5. Redis有序集</h1>
+<p>Redis的有序集合类似Redis的集合存储在设定值具有唯一性。不同的是，一个有序集合的每个成员用分数，以便采取有序set命令，从最小的到最大的分数有关。</p>
+<p>在Redis的有序set添加，删除和测试存在成员O（1）（固定时间，无论里面包含集合元素的数量）。列表的最大长度为 232 - 1 个元素（每集合超过4294967295元素）。</p>
+<p>例子</p>
+<pre><code><span class="input"><span class="prompt">redis 127.0.0.1:6379&gt;</span> <span class="constant">ZADD</span> tutorials3 <span class="number">1</span> redis</span>
+<span class="input"><span class="prompt">
+(integer) 1
+
+redis 127.0.0.1:6379&gt;</span> <span class="constant">ZADD</span> tutorials3 <span class="number">2</span> mongodb</span>
+<span class="input"><span class="prompt">
+(integer) 1
+
+redis 127.0.0.1:6379&gt;</span> <span class="constant">ZADD</span> tutorials3 <span class="number">3</span> mysql</span>
+<span class="input"><span class="prompt">
+(integer) 1
+
+redis 127.0.0.1:6379&gt;</span> <span class="constant">ZADD</span> tutorials3 <span class="number">3</span> mysql</span>
+<span class="input"><span class="prompt">
+(integer) 0
+
+redis 127.0.0.1:6379&gt;</span> <span class="constant">ZADD</span> tutorials3 <span class="number">4</span> mysql</span>
+<span class="input"><span class="prompt">
+(integer) 0
+
+redis 127.0.0.1:6379&gt;</span> <span class="constant">ZRANGE</span> tutorials3 <span class="number">0</span> <span class="number">10</span> <span class="constant">WITHSCORES</span></span>
+
+
+
+<span class="number">1</span>) <span class="string">"redis"</span>
+
+<span class="number">2</span>) <span class="string">"1"</span>
+
+<span class="number">3</span>) <span class="string">"mongodb"</span>
+
+<span class="number">4</span>) <span class="string">"2"</span>
+
+<span class="number">5</span>) <span class="string">"mysql"</span>
+
+<span class="number">6</span>) <span class="string">"4"</span>
+</code></pre><p>在上述例子中的三个值被命令ZADD插入其得分在redis的有序集命名为tutorials3。最终打印出每个元素以及对应的下标。</p>
+<p>也可以只遍历出集合的元素</p>
+<pre><code><span class="input"><span class="prompt">redis 127.0.0.1:6379&gt;</span> <span class="constant">ZRANGEBYSCORE</span> tutoriallist3 <span class="number">0</span> <span class="number">1000</span></span>
+
+<span class="number">1</span>) <span class="string">"redis"</span>
+
+<span class="number">2</span>) <span class="string">"mongodb"</span>
+
+<span class="number">3</span>) <span class="string">"rabitmq"</span>
+</code></pre><p>该类型可以理解为java中的linkedhashset</p>
+]]></content>
+         
+         
+           
+             
+              <breadCrumb title="缓存" url="www.lkh.im/categories/%E7%BC%93%E5%AD%98/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>www.lkh.im/2014/12/20/ubuntu12-04-%E5%9C%A8virtualbox%E4%B8%8B%E6%A1%A5%E6%8E%A5-centos-%E8%99%9A%E6%8B%9F%E6%9C%BA/</loc>
+    <lastmod>2014-12-20T06:32:47.000Z</lastmod>
+    <data>
+        <display>
+        <title>ubuntu12.04 在virtualbox下桥接 centos 虚拟机</title>
+        <pubTime>2014-12-20T06:08:06.000Z</pubTime>
+        
+        <tag>ubuntu，linux，centos </tag>
+         
+         <content><![CDATA[<h2 id="1-主机的网络环境">1.主机的网络环境</h2>
+<p><img src="/images/2014/12/20/1.jpeg" alt=""> </p>
+<h2 id="2-设置virualbox的网络连接方式">2.设置virualbox的网络连接方式</h2>
+<p><img src="/images/2014/12/20/2.jpeg" alt=""><br>选择桥接网络，并选择eth0</p>
+<h2 id="3-修改虚拟机的网络配置">3.修改虚拟机的网络配置</h2>
+<p>修改/etc/sysconfig/network-script/ifcfg-eth0</p>
+<p>BOOTPROTO=static</p>
+<p>ONBOOT=yes</p>
+<p>TYPE=Ethernet</p>
+<p>IPADDR=172.16.3.166      //虚拟机的ip</p>
+<p>NETMASK=255.255.255.0  //子网掩码</p>
+<p>GATEWAY=172.16.3.254   //网关</p>
+<p>然后需要添加dns</p>
+<p>vi /etc/resolv.conf</p>
+<p>nameserver 202.96.128.86 </p>
+<p>重启网络</p>
+<p>service network restart</p>
+<p>再查看虚拟机的ip，eth0的ip已经变修改成更主机相同的网段<br><img src="/images/2014/12/20/3.jpeg" alt=""> </p>
+<p>并ping通主机<br><img src="/images/2014/12/20/4.jpeg" alt=""> </p>
+<p>再尝试通过主机shh到centos虚拟上<br><img src="/images/2014/12/20/5.jpeg" alt=""> </p>
+<p>现在主机和虚拟机已经是通个网段上，并且连通了</p>
+]]></content>
+         
+         
+           
+             
+              <breadCrumb title="运维" url="www.lkh.im/categories/%E8%BF%90%E7%BB%B4/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>www.lkh.im/2014/12/20/virtualbox%E5%A4%8D%E5%88%B6centos%E8%99%9A%E6%8B%9F%E6%9C%BA/</loc>
+    <lastmod>2014-12-20T06:31:59.000Z</lastmod>
+    <data>
+        <display>
+        <title>virtualbox复制centos虚拟机</title>
+        <pubTime>2014-12-20T06:30:47.000Z</pubTime>
+        
+        <tag>虚拟机，centos </tag>
+         
+         <content><![CDATA[<ol>
+<li>右键选择选择已经装好的centos系统，点击复制，进去下图</li>
+</ol>
+<p>这里把名字取为centos 172.16.3.165 代表ip修改为165，并选择重新生成mac地址</p>
+<p> <img src="/images/2014/12/20/6.jpeg" alt=""> </p>
+<ol>
+<li><p>选择完全复制</p>
+<p><img src="/images/2014/12/20/7.jpeg" alt=""> </p>
+</li>
+</ol>
+<p>复制完成后，启动centos 172.16.3.165 这台虚拟机</p>
+<p>3.进去虚拟机，查看虚拟机的网络环境 输入ifconfig</p>
+<p> <img src="/images/2014/12/20/8.jpeg" alt="">  </p>
+<p>由上图看出目前的ip是155。需要注意的是，这里的mac地址是旧的虚拟机的地址，需要改成virtualbox分配的新mac地址，具体操作如下</p>
+<p>4.把mac地址改成virtualbox分配的新的mac地址</p>
+<p>先删除/etc/udev/rules.d/70-persistent-net.rules文件,重启后会自动生成</p>
+<p>修改/etc/sysconfig/network-script/ifcfg-eth0</p>
+<p>BOOTPROTO=static</p>
+<p>ONBOOT=yes</p>
+<p>TYPE=Ethernet</p>
+<p>IPADDR=172.16.3.165      //虚拟机的ip</p>
+<p>NETMASK=255.255.255.0  //子网掩码</p>
+<p>GATEWAY=172.16.3.254   //网关</p>
+<p>HWADDR=08：00：27：CC:E3：79  //MAC地址 </p>
+<p> 这里是mac地址可以在右键(virtualbox的虚拟机—》设置—》网络)查询到</p>
+<p>如下图红色部分：</p>
+<p> <img src="/images/2014/12/20/9.jpeg" alt=""> </p>
+<p>然后需要添加dns</p>
+<p>vi /etc/resolv.conf</p>
+<p>nameserver 202.96.128.86 </p>
+<p>最后reboot</p>
+]]></content>
+         
+         
+           
+             
+              <breadCrumb title="运维" url="www.lkh.im/categories/%E8%BF%90%E7%BB%B4/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>www.lkh.im/2014/12/20/jdbcTemplate/</loc>
+    <lastmod>2014-12-20T03:45:55.000Z</lastmod>
+    <data>
+        <display>
+        <title>jdbcTemplate</title>
+        <pubTime>2014-12-20T03:43:20.000Z</pubTime>
+        
+        <tag>java，jdbcTemplate </tag>
+         
+         <content><![CDATA[<h1 id="Jdbctemplate_的基本使用">Jdbctemplate 的基本使用</h1>
+<p>依赖：</p>
+<pre><code><span class="tag">&lt;<span class="title">dependencies</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">dependency</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.springframework<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>spring-context<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">version</span>&gt;</span>4.1.3.RELEASE<span class="tag">&lt;/<span class="title">version</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">dependency</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">dependency</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>commons-dbcp<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>commons-dbcp<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">version</span>&gt;</span>1.4<span class="tag">&lt;/<span class="title">version</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">dependency</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">dependency</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.springframework<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>spring-jdbc<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">version</span>&gt;</span>4.1.3.RELEASE<span class="tag">&lt;/<span class="title">version</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">dependency</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">dependency</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.springframework<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>spring-test<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">version</span>&gt;</span>4.0.5.RELEASE<span class="tag">&lt;/<span class="title">version</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="title">scope</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">dependency</span>&gt;</span>
+    <span class="tag">&lt;<span class="title">dependency</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.aspectj<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>aspectjweaver<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">version</span>&gt;</span>1.8.4<span class="tag">&lt;/<span class="title">version</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">dependency</span>&gt;</span>
+<span class="comment">&lt;!-- jdbc driver --&gt;</span>
+<span class="tag">&lt;<span class="title">dependency</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>mysql<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>mysql-connector-java<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">version</span>&gt;</span>5.1.21<span class="tag">&lt;/<span class="title">version</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">scope</span>&gt;</span>runtime<span class="tag">&lt;/<span class="title">scope</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">dependency</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">dependencies</span>&gt;</span>
+</code></pre><p>建立数据库表：</p>
+<pre><code><span class="operator"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`user`</span> (
+  <span class="string">`id`</span> <span class="built_in">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> AUTO_INCREMENT,
+  <span class="string">`username`</span> <span class="built_in">varchar</span>(<span class="number">255</span>) <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,
+  <span class="string">`password`</span> <span class="built_in">varchar</span>(<span class="number">255</span>) <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,
+  <span class="string">`createDate`</span> datetime <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,
+  <span class="string">`modifyDate`</span> <span class="built_in">varchar</span>(<span class="number">255</span>) <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,
+  <span class="string">`type`</span> <span class="built_in">varchar</span>(<span class="number">255</span>) <span class="keyword">DEFAULT</span> <span class="literal">NULL</span>,
+  <span class="keyword">PRIMARY</span> <span class="keyword">KEY</span> (<span class="string">`id`</span>)
+) <span class="keyword">ENGINE</span>=<span class="keyword">InnoDB</span> AUTO_INCREMENT=<span class="number">223</span> <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8;</span>
+</code></pre><p>aplicationContext.xml的配置</p>
+<pre><code><span class="pi">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="tag">&lt;<span class="title">beans</span> <span class="attribute">xmlns</span>=<span class="value">"http://www.springframework.org/schema/beans"</span>
+<span class="attribute">xmlns:mvc</span>=<span class="value">"http://www.springframework.org/schema/mvc"</span>
+<span class="attribute">xmlns:xsi</span>=<span class="value">"http://www.w3.org/2001/XMLSchema-instance"</span>
+<span class="attribute">xmlns:context</span>=<span class="value">"http://www.springframework.org/schema/context"</span>
+<span class="attribute">xmlns:aop</span>=<span class="value">"http://www.springframework.org/schema/aop"</span>
+<span class="attribute">xmlns:tx</span>=<span class="value">"http://www.springframework.org/schema/tx"</span>
+<span class="attribute">xsi:schemaLocation</span>=<span class="value">"http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-3.1.xsd
+       http://www.springframework.org/schema/aop
+       http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx-3.1.xsd"</span>&gt;</span>
+<span class="comment">&lt;!-- 扫描包 --&gt;</span>
+<span class="tag">&lt;<span class="title">context:annotation-config</span>/&gt;</span>
+    <span class="tag">&lt;<span class="title">context:component-scan</span> <span class="attribute">base-package</span>=<span class="value">"com.hang.*"</span> /&gt;</span>
+<span class="comment">&lt;!-- 配置jdbc --&gt;</span>
+<span class="tag">&lt;<span class="title">bean</span> <span class="attribute">class</span>=<span class="value">"org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer"</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"locations"</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">value</span>&gt;</span>classpath:jdbc.properties<span class="tag">&lt;/<span class="title">value</span>&gt;</span>
+        <span class="tag">&lt;/<span class="title">property</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">bean</span>&gt;</span>
+<span class="comment">&lt;!-- 配置數據源 --&gt;</span>
+<span class="tag">&lt;<span class="title">bean</span> <span class="attribute">id</span>=<span class="value">"dataSource"</span> <span class="attribute">class</span>=<span class="value">"org.apache.commons.dbcp.BasicDataSource"</span>
+<span class="attribute">destroy-method</span>=<span class="value">"close"</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"driverClassName"</span> <span class="attribute">value</span>=<span class="value">"${jdbc.driver}"</span> /&gt;</span>
+        <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"url"</span> <span class="attribute">value</span>=<span class="value">"${jdbc.url}"</span> /&gt;</span>
+        <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"username"</span> <span class="attribute">value</span>=<span class="value">"${jdbc.username}"</span> /&gt;</span>
+        <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"password"</span> <span class="attribute">value</span>=<span class="value">"${jdbc.password}"</span> /&gt;</span>
+<span class="comment">&lt;!-- 连接池启动时的初始值 --&gt;</span>
+<span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"initialSize"</span> <span class="attribute">value</span>=<span class="value">"${initialSize}"</span>/&gt;</span>
+        <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"maxActive"</span> <span class="attribute">value</span>=<span class="value">"${maxActive}"</span>/&gt;</span>
+        <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"maxIdle"</span> <span class="attribute">value</span>=<span class="value">"${maxIdle}"</span>/&gt;</span>
+        <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"minIdle"</span> <span class="attribute">value</span>=<span class="value">"${minIdle}"</span>/&gt;</span>
+    <span class="tag">&lt;/<span class="title">bean</span>&gt;</span>
+<span class="comment">&lt;!-- 配置jdbcTemplate模板 --&gt;</span>
+<span class="tag">&lt;<span class="title">bean</span> <span class="attribute">id</span>=<span class="value">"jdbcTemplate"</span> <span class="attribute">class</span>=<span class="value">"org.springframework.jdbc.core.JdbcTemplate"</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"dataSource"</span> <span class="attribute">ref</span>=<span class="value">"dataSource"</span> /&gt;</span>
+    <span class="tag">&lt;/<span class="title">bean</span>&gt;</span>
+<span class="comment">&lt;!-- 配置 transactionManager事物管理--&gt;</span>
+<span class="tag">&lt;<span class="title">bean</span> <span class="attribute">id</span>=<span class="value">"transactionManager"</span> <span class="attribute">class</span>=<span class="value">"org.springframework.jdbc.datasource.DataSourceTransactionManager"</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">property</span> <span class="attribute">name</span>=<span class="value">"dataSource"</span> <span class="attribute">ref</span>=<span class="value">"dataSource"</span>/&gt;</span>
+    <span class="tag">&lt;/<span class="title">bean</span>&gt;</span>
+<span class="comment">&lt;!-- Spring AOP config配置切点 --&gt;</span>
+<span class="tag">&lt;<span class="title">aop:config</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">aop:pointcut</span> <span class="attribute">expression</span>=<span class="value">"execution(* com.hang.service.*.*(..))"</span> <span class="attribute">id</span>=<span class="value">"bussinessService"</span> /&gt;</span>
+        <span class="tag">&lt;<span class="title">aop:advisor</span> <span class="attribute">advice-ref</span>=<span class="value">"txAdvice"</span> <span class="attribute">pointcut-ref</span>=<span class="value">"bussinessService"</span>/&gt;</span>
+    <span class="tag">&lt;/<span class="title">aop:config</span>&gt;</span>
+<span class="comment">&lt;!-- 配置那个类那个方法用到事务处理 --&gt;</span>
+<span class="tag">&lt;<span class="title">tx:advice</span> <span class="attribute">id</span>=<span class="value">"txAdvice"</span> <span class="attribute">transaction-manager</span>=<span class="value">"transactionManager"</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">tx:attributes</span>&gt;</span>
+            <span class="tag">&lt;<span class="title">tx:method</span> <span class="attribute">name</span>=<span class="value">"get*"</span> <span class="attribute">read-only</span>=<span class="value">"true"</span>/&gt;</span>
+            <span class="tag">&lt;<span class="title">tx:method</span> <span class="attribute">name</span>=<span class="value">"add*"</span> <span class="attribute">propagation</span>=<span class="value">"REQUIRED"</span>/&gt;</span>
+            <span class="tag">&lt;<span class="title">tx:method</span> <span class="attribute">name</span>=<span class="value">"update*"</span> <span class="attribute">propagation</span>=<span class="value">"REQUIRED"</span>/&gt;</span>
+            <span class="tag">&lt;<span class="title">tx:method</span> <span class="attribute">name</span>=<span class="value">"delete*"</span> <span class="attribute">propagation</span>=<span class="value">"REQUIRED"</span>/&gt;</span>
+            <span class="tag">&lt;<span class="title">tx:method</span> <span class="attribute">name</span>=<span class="value">"*"</span> <span class="attribute">propagation</span>=<span class="value">"REQUIRED"</span>/&gt;</span>
+        <span class="tag">&lt;/<span class="title">tx:attributes</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">tx:advice</span>&gt;</span>
+    <span class="tag">&lt;/<span class="title">beans</span>&gt;</span>
+</code></pre><p>Jdbc.properties</p>
+<pre><code>jdbc.<span class="variable">driver=</span>com.mysql.jdbc.Driver
+jdbc.<span class="variable">url=</span>jdbc:mysql://localhost:<span class="number">3306</span>/jdbcTemplate?<span class="variable">useUnicode=</span><span class="constant">true</span>&amp;amp;<span class="variable">characterEncoding=</span>UTF-<span class="number">8</span>
+jdbc.<span class="variable">username=</span>root
+jdbc.<span class="variable">password=</span><span class="variable">rootinitialSize=</span><span class="number">1</span>
+<span class="variable">maxActive=</span><span class="number">500</span>
+<span class="variable">maxIdle=</span><span class="number">2</span>
+<span class="variable">minIdle=</span><span class="number">1</span>             
+</code></pre><p>建立User对象</p>
+<pre><code><span class="keyword">package</span> com.hang.entity;
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> </span>{
+
+   <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">long</span> serialVersionUID = <span class="number">1</span>L;
+   <span class="keyword">private</span> <span class="keyword">int</span> id;
+   <span class="keyword">private</span> String password;
+   <span class="keyword">private</span> String username;
+   <span class="keyword">private</span> String createDate;
+   <span class="keyword">private</span> String modifyDate;
+   <span class="keyword">private</span> String type;
+<span class="javadoc">/** 省略set get 方法**/</span>
+}
+</code></pre><p>建立JdbcTempBaseDao，用于获取 jdbcTemplate对象的公共类</p>
+<pre><code><span class="keyword">package</span> com.hang.dao.base;
+<span class="keyword">import</span> org.springframework.jdbc.core.JdbcTemplate;
+<span class="keyword">import</span> org.springframework.jdbc.core.support.JdbcDaoSupport;
+<span class="keyword">import</span> javax.annotation.PostConstruct;
+<span class="keyword">import</span> javax.annotation.Resource;
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JdbcTempBaseDao</span> <span class="keyword">extends</span> <span class="title">JdbcDaoSupport</span> </span>{
+
+   <span class="javadoc">/**
+    */</span>
+<span class="annotation">@Resource</span>(name = <span class="string">"jdbcTemplate"</span>)
+   <span class="keyword">public</span> JdbcTemplate jdbcTemplate;
+<span class="annotation">@PostConstruct</span>  
+<span class="keyword">public</span> <span class="keyword">void</span> <span class="title">initSqlMapClient</span>() {  
+         <span class="keyword">super</span>.setJdbcTemplate(jdbcTemplate);
+} 
+}
+</code></pre><p>建立IUserDao接口，对userDao的基本操作</p>
+<pre><code><span class="keyword">package</span> com.hang.dao;
+<span class="keyword">import</span> com.hang.entity.User;
+<span class="keyword">import</span> java.util.List;
+<span class="keyword">import</span> java.util.Map;
+<span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">IUserDao</span> </span>{
+   <span class="keyword">public</span> List&lt;User&gt; <span class="title">getUserList</span>();
+   <span class="keyword">public</span> List&lt;User&gt; <span class="title">getUserLists</span>(Map&lt;String, Object&gt; map);
+   <span class="keyword">public</span> Integer <span class="title">getUserCount</span>(Map&lt;String, Object&gt; map);
+   <span class="keyword">public</span> User <span class="title">getUserById</span>(Integer primaryKeyId);
+   <span class="keyword">public</span> <span class="keyword">void</span> <span class="title">delUserById</span>(Integer primaryKeyId);
+   <span class="keyword">public</span> User <span class="title">addUser</span>(User entity);
+   <span class="keyword">public</span> <span class="keyword">void</span> <span class="title">editUser</span>(User entity);
+}
+</code></pre><p>IUserDao 的实现</p>
+<pre><code><span class="keyword">package</span> com.hang.dao.impl;
+<span class="keyword">import</span> com.hang.dao.IUserDao;
+<span class="keyword">import</span> com.hang.dao.base.JdbcTempBaseDao;
+<span class="keyword">import</span> com.hang.entity.User;
+<span class="keyword">import</span> org.springframework.jdbc.core.BeanPropertyRowMapper;
+<span class="keyword">import</span> org.springframework.jdbc.core.PreparedStatementCreator;
+<span class="keyword">import</span> org.springframework.jdbc.core.RowCallbackHandler;
+<span class="keyword">import</span> org.springframework.jdbc.support.GeneratedKeyHolder;
+<span class="keyword">import</span> org.springframework.stereotype.Repository;
+<span class="keyword">import</span> java.sql.Connection;
+<span class="keyword">import</span> java.sql.PreparedStatement;
+<span class="keyword">import</span> java.sql.ResultSet;
+<span class="keyword">import</span> java.sql.SQLException;
+<span class="keyword">import</span> java.util.ArrayList;
+<span class="keyword">import</span> java.util.List;
+<span class="keyword">import</span> java.util.Map;
+<span class="annotation">@Repository</span>
+<span class="annotation">@SuppressWarnings</span>(<span class="string">"all"</span>)
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserDaoImpl</span> <span class="keyword">extends</span> <span class="title">JdbcTempBaseDao</span> <span class="keyword">implements</span> <span class="title">IUserDao</span> </span>{
+
+   <span class="annotation">@Override</span>
+<span class="keyword">public</span> List&lt;User&gt; <span class="title">getUserList</span>() {
+      String sql=<span class="string">"select * from user "</span>;
+      <span class="keyword">final</span> List&lt;User&gt;  list= <span class="keyword">new</span> ArrayList&lt;User&gt;();
+jdbcTemplate.query(sql, <span class="keyword">new</span> RowCallbackHandler(){
+         <span class="annotation">@Override</span>
+<span class="keyword">public</span> <span class="keyword">void</span> <span class="title">processRow</span>(ResultSet rs) <span class="keyword">throws</span> SQLException {
+            User u=<span class="keyword">new</span> User();
+u.setId(rs.getInt(<span class="string">"id"</span>));
+u.setUsername(rs.getString(<span class="string">"username"</span>));
+u.setPassword(rs.getString(<span class="string">"password"</span>));
+u.setCreateDate(rs.getString(<span class="string">"createDate"</span>));
+u.setModifyDate(rs.getString(<span class="string">"modifyDate"</span>));
+u.setType(rs.getString(<span class="string">"type"</span>));
+list.add(u);
+}
+      });
+      <span class="keyword">return</span> list;
+}
+
+   <span class="annotation">@Override</span>
+<span class="keyword">public</span> List&lt;User&gt; <span class="title">getUserLists</span>(Map&lt;String, Object&gt; map) {
+      <span class="keyword">return</span> <span class="keyword">null</span>;
+}
+
+   <span class="annotation">@Override</span>
+<span class="keyword">public</span> Integer <span class="title">getUserCount</span>(Map&lt;String, Object&gt; map) {
+       String sql = <span class="string">"select count(1) from User where id=? "</span>;
+        <span class="keyword">return</span> getJdbcTemplate().queryForObject(sql, Integer.class,map);
+}
+
+   <span class="annotation">@Override</span>
+<span class="keyword">public</span> User <span class="title">getUserById</span>(Integer primaryKeyId) {
+      String sql = <span class="string">"select id,username, password, createDate, modifyDate,type from User where id=?"</span>;
+List&lt;User&gt; userList = getJdbcTemplate().query(sql, <span class="keyword">new</span> BeanPropertyRowMapper(User.class), primaryKeyId);
+        <span class="keyword">if</span>(userList.size() == <span class="number">0</span>) {
+            <span class="keyword">return</span> <span class="keyword">null</span>;
+}
+        <span class="keyword">return</span> userList.get(<span class="number">0</span>);
+}
+
+   <span class="annotation">@Override</span>
+<span class="keyword">public</span> <span class="keyword">void</span> <span class="title">delUserById</span>(Integer primaryKeyId) {
+       String sql = <span class="string">"delete from user where id=?"</span>;
+getJdbcTemplate().update(sql, primaryKeyId);
+}
+
+   <span class="annotation">@Override</span>
+<span class="keyword">public</span> User <span class="title">addUser</span>(<span class="keyword">final</span> User entity) {
+      <span class="keyword">final</span> String sql = <span class="string">"insert into User(username, password, createDate, modifyDate,type) values(?,?,?,?,?)"</span>;
+GeneratedKeyHolder keyHolder = <span class="keyword">new</span> GeneratedKeyHolder();
+getJdbcTemplate().update(<span class="keyword">new</span> PreparedStatementCreator() {
+            <span class="annotation">@Override</span>
+<span class="keyword">public</span> PreparedStatement <span class="title">createPreparedStatement</span>(Connection connection) <span class="keyword">throws</span> SQLException {
+                PreparedStatement psst = connection.prepareStatement(sql, <span class="keyword">new</span> String[]{<span class="string">"id"</span>});
+psst.setString(<span class="number">1</span>, entity.getUsername());
+psst.setString(<span class="number">2</span>, entity.getPassword());
+psst.setString(<span class="number">3</span>, entity.getCreateDate());
+psst.setString(<span class="number">4</span>, entity.getModifyDate());
+psst.setString(<span class="number">5</span>, entity.getType());
+                <span class="keyword">return</span> psst;
+}
+        }, keyHolder);
+entity.setId(keyHolder.getKey().intValue());
+        <span class="keyword">return</span> entity;
+}
+
+   <span class="annotation">@Override</span>
+<span class="keyword">public</span> <span class="keyword">void</span> <span class="title">editUser</span>(User entity) {
+      String sql=<span class="string">"update user set username=?,password=?"</span>;
+jdbcTemplate.update(sql, User.class,entity);
+} 
+}
+</code></pre><p>UserDaoTest，对userdao的测试</p>
+<pre><code><span class="keyword">import</span> com.hang.dao.IUserDao;
+<span class="keyword">import</span> com.hang.entity.User;
+<span class="keyword">import</span> org.junit.BeforeClass;
+<span class="keyword">import</span> org.junit.Test;
+<span class="keyword">import</span> org.springframework.context.ApplicationContext;
+<span class="keyword">import</span> org.springframework.context.support.ClassPathXmlApplicationContext;
+<span class="keyword">import</span> java.util.List;
+<span class="javadoc">/**
+ * Created with IntelliJ IDEA.
+ * User: hang
+ * Date: 14-12-18
+ * Time: 上午11:44
+ * To change this template use File | Settings | File Templates.
+ */</span>
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">UserDaoTest</span></span>{
+
+    <span class="keyword">private</span> <span class="keyword">static</span> IUserDao userDao;
+<span class="annotation">@BeforeClass</span>
+<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">setUpBeforeClass</span>() {
+        ApplicationContext applicationContext = <span class="keyword">new</span> ClassPathXmlApplicationContext(<span class="string">"aplicationContext.xml"</span>);
+userDao = (IUserDao) applicationContext.getBean(<span class="string">"userDaoImpl"</span>);
+}
+
+    <span class="annotation">@Test</span>
+<span class="keyword">public</span> <span class="keyword">void</span> <span class="title">getUserList</span>(){
+        List&lt;User&gt; users = userDao.getUserList();
+System.out.println(users.size());
+}
+}
+</code></pre>]]></content>
+         
+         
+           
+             
+              <breadCrumb title="java" url="www.lkh.im/categories/java/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>www.lkh.im/2014/12/20/hello-world/</loc>
+    <lastmod>2014-12-19T08:15:22.000Z</lastmod>
+    <data>
+        <display>
+        <title>Hello World</title>
+        <pubTime>2014-12-20T05:59:31.000Z</pubTime>
+        
+         <content><![CDATA[<p>Welcome to <a href="http://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="http://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="http://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">trobuleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
+<h2 id="Quick_Start">Quick Start</h2>
+<h3 id="Create_a_new_post">Create a new post</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
+
+<p>More info: <a href="http://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
+<h3 id="Run_server">Run server</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
+
+<p>More info: <a href="http://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
+<h3 id="Generate_static_files">Generate static files</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
+
+<p>More info: <a href="http://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
+<h3 id="Deploy_to_remote_sites">Deploy to remote sites</h3>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
+
+<p>More info: <a href="http://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+]]></content>
+         
+         
+           
+        </display>
+    </data>
+    </url>
+
+</urlset>
