@@ -523,7 +523,7 @@ header nav ul li a {
 }
 header nav ul li a:hover {
   background: #80A7D4;
-  color: #596F34;
+  color: rgba(98, 215, 240, 0.33);
 }
 .shownav {
   max-height: 40em;
