@@ -522,7 +522,7 @@ header nav ul li a {
   }
 }
 header nav ul li a:hover {
-  background: rgba(87, 155, 155, 1);
+  background: #569898;
   color: #e9cd4c;
 }
 .shownav {
