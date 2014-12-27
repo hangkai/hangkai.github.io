@@ -7,12 +7,14 @@
   <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8" />
 <meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88" />
   
-    <title>Hello World | Hang&#39;s blog</title>
+    <title>LVS 三种工作模式原理、以及优缺点比较 | Hang&#39;s blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="hang">
     
-    <meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in ">
+    <meta name="description" content="一、NAT模式（VS-NAT）
+原理：
+就是把客户端发来的数据包的IP头的目的地址，在负载均衡器上换成其中一台RS 的IP地址，并发至此RS来处理,RS处理完成后把数据交给经过负载均衡器,负载均衡器再把数据包的原IP地址改为自己的IP，将目的地址改为客户端IP 地址即可｡期间,无论是进来的流量,还是">
     
     
     
@@ -75,15 +77,15 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2014/12/20/hello-world/" title="Hello World" itemprop="url">Hello World</a>
+      <a href="/2014/12/27/LVS-三种工作模式原理、以及优缺点比较/" title="LVS 三种工作模式原理、以及优缺点比较" itemprop="url">LVS 三种工作模式原理、以及优缺点比较</a>
   </h1>
   <p class="article-author">By
     
       <a href="www.lkh.im" title="hang">hang</a>
     </p>
   <p class="article-time">
-    <time datetime="2014-12-20T05:59:31.000Z" itemprop="datePublished">12月 20 2014</time>
-    更新日期:<time datetime="2014-12-19T08:15:22.000Z" itemprop="dateModified">12月 19 2014</time>
+    <time datetime="2014-12-27T06:05:34.000Z" itemprop="datePublished">12月 27 2014</time>
+    更新日期:<time datetime="2014-12-27T06:10:07.000Z" itemprop="dateModified">12月 27 2014</time>
     
   </p>
 </header>
@@ -92,37 +94,44 @@
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Quick_Start"><span class="toc-number">1.</span> <span class="toc-text">Quick Start</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Create_a_new_post"><span class="toc-number">1.1.</span> <span class="toc-text">Create a new post</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Run_server"><span class="toc-number">1.2.</span> <span class="toc-text">Run server</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Generate_static_files"><span class="toc-number">1.3.</span> <span class="toc-text">Generate static files</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Deploy_to_remote_sites"><span class="toc-number">1.4.</span> <span class="toc-text">Deploy to remote sites</span></a></li></ol></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#一、NAT模式（VS-NAT）"><span class="toc-number">1.</span> <span class="toc-text">一、NAT模式（VS-NAT）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#二、IP隧道模式（VS-TUN）"><span class="toc-number">2.</span> <span class="toc-text">二、IP隧道模式（VS-TUN）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#三、直接路由模式（VS-DR）"><span class="toc-number">3.</span> <span class="toc-text">三、直接路由模式（VS-DR）</span></a></li></ol>
 		</div>
 		
-		<p>Welcome to <a href="http://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="http://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="http://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">trobuleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick_Start">Quick Start</h2>
-<h3 id="Create_a_new_post">Create a new post</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
-
-<p>More info: <a href="http://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run_server">Run server</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
-
-<p>More info: <a href="http://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate_static_files">Generate static files</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
-
-<p>More info: <a href="http://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy_to_remote_sites">Deploy to remote sites</h3>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
-
-<p>More info: <a href="http://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+		<h1 id="一、NAT模式（VS-NAT）">一、NAT模式（VS-NAT）</h1>
+<p>原理：</p>
+<p>就是把客户端发来的数据包的IP头的目的地址，在负载均衡器上换成其中一台RS 的IP地址，并发至此RS来处理,RS处理完成后把数据交给经过负载均衡器,负载均衡器再把数据包的原IP地址改为自己的IP，将目的地址改为客户端IP 地址即可｡期间,无论是进来的流量,还是出去的流量,都必须经过负载均衡器｡</p>
+<p>优点：集群中的物理服务器可以使用任何支持TCP/IP操作系统，只有负载均衡器需要一个合法的IP地址。</p>
+<p>缺点：扩展性有限。当服务器节点（普通PC服务器）增长过多时,负载均衡器将成为整个系统的瓶颈，因为所有的请求包和应答包的流向都经过负载均衡器。当服务器节点过多时，大量的数据包都交汇在负载均衡器那，速度就会变慢！</p>
+<h1 id="二、IP隧道模式（VS-TUN）">二、IP隧道模式（VS-TUN）</h1>
+<p>原理：</p>
+<p>首先要知道，互联网上的大多Internet服务的请求包很短小，而应答包通常很大。那么隧道模式就是，把客户端发来的数据包，封装一个新的IP头标记(仅目的IP)发给RS,RS收到后,先把数据包的头解开,还原数据包,处理后,直接返回给客户端,不需要再经过负载均衡器｡注意,由于RS需要对负载均衡器 发过来的数据包进行还原,所以说必须支持IPTUNNEL协议｡所以,在RS的内核中,必须编译支持IPTUNNEL这个选项</p>
+<p>优点：负载均衡器只负责将请求包分发给后端节点服务器，而RS将应答包直接发给用户。所以，减少了负载均衡器的大量数据流动，负载均衡器不再是系统的瓶颈，就能处理很巨大的请求量，这种方式，一台负载均衡器能够为很多RS进行分发。而且跑在公网上就能进行不同地域的分发。</p>
+<p>缺点：隧道模式的RS节点需要合法IP，这种方式需要所有的服务器支持”IP Tunneling”(IP Encapsulation)协议，服务器可能只局限在部分Linux系统上。</p>
+<h1 id="三、直接路由模式（VS-DR）">三、直接路由模式（VS-DR）</h1>
+<p>原理：</p>
+<p>负载均衡器和RS都使用同一个IP对外服务｡但只有DR对ARP请求进行响应,所有RS对本身这个IP的ARP请求保持静默｡也就是说,网关会把对这个服务 IP的请求全部定向给DR,而DR收到数据包后根据调度算法,找出对应的RS,把目的MAC地址改为RS的MAC（因为IP一致）并将请求分发给这台 RS｡这时RS收到这个数据包,处理完成之后，由于IP一致，可以直接将数据返给客户，则等于直接从客户端收到这个数据包无异,处理后直接返回给客户端｡ 由于负载均衡器要对二层包头进行改换,所以负载均衡器和RS之间必须在一个广播域,也可以简单的理解为在同一台交换机上｡</p>
+<p>优点：和TUN（隧道模式）一样，负载均衡器也只是分发请求，应答包通过单独的路由方法返回给客户端。与VS-TUN相比，VS-DR这种实现方式不需要隧道结构，因此可以使用大多数操作系统做为物理服务器。</p>
+<p>缺点：（不能说缺点，只能说是不足）要求负载均衡器的网卡必须与物理网卡在一个物理段上。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
 
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/linux/">linux</a><a href="/tags/lvs/">lvs</a>
+  </div>
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/运维/">运维</a>
+</div>
 
 
 
 <div class="article-share" id="share">
 
-  <div data-url="www.lkh.im/2014/12/20/hello-world/" data-title="Hello World | Hang&#39;s blog" data-tsina="null" class="share clearfix">
+  <div data-url="www.lkh.im/2014/12/27/LVS-三种工作模式原理、以及优缺点比较/" data-title="LVS 三种工作模式原理、以及优缺点比较 | Hang&#39;s blog" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -131,19 +140,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2014/12/20/ubuntu12-04-在virtualbox下桥接-centos-虚拟机/" title="ubuntu12.04 在virtualbox下桥接 centos 虚拟机">
-  <strong>PREVIOUS:</strong><br/>
-  <span>
-  ubuntu12.04 在virtualbox下桥接 centos 虚拟机</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2014/12/20/jdbcTemplate/"  title="jdbcTemplate">
+<a href="/2014/12/20/centos6下安装redis/"  title="centos6下安装redis">
  <strong>NEXT:</strong><br/> 
- <span>jdbcTemplate
+ <span>centos6下安装redis
 </span>
 </a>
 </div>
@@ -160,7 +161,7 @@
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Quick_Start"><span class="toc-number">1.</span> <span class="toc-text">Quick Start</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Create_a_new_post"><span class="toc-number">1.1.</span> <span class="toc-text">Create a new post</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Run_server"><span class="toc-number">1.2.</span> <span class="toc-text">Run server</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Generate_static_files"><span class="toc-number">1.3.</span> <span class="toc-text">Generate static files</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Deploy_to_remote_sites"><span class="toc-number">1.4.</span> <span class="toc-text">Deploy to remote sites</span></a></li></ol></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#一、NAT模式（VS-NAT）"><span class="toc-number">1.</span> <span class="toc-text">一、NAT模式（VS-NAT）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#二、IP隧道模式（VS-TUN）"><span class="toc-number">2.</span> <span class="toc-text">二、IP隧道模式（VS-TUN）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#三、直接路由模式（VS-DR）"><span class="toc-number">3.</span> <span class="toc-text">三、直接路由模式（VS-DR）</span></a></li></ol>
   </div>
 
 <div id="asidepart">
