@@ -7,18 +7,19 @@
   <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8" />
 <meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88" />
   
-    <title>centos6下安装redis | Hang&#39;s blog</title>
+    <title>vi基本操作 | Hang&#39;s blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="hang">
     
-    <meta name="description" content="安装ridis前，先安装gcc和tcl
-gcc的安装:
-yum install gcc-c++
-tcl的安装:
-yum install -y tcl
-安装完成后，开始安装redis，先下载redis的源码并编译
-wget http://download.redis.io/redis-stable.t">
+    <meta name="description" content="vi有3个模式：插入模式、命令模式、低行模式。
+
+插入模式：在此模式下可以输入字符，按ESC将回到命令模式。
+命令模式：可以移动光标、删除字符等。
+低行模式：可以保存文件、退出vi、设置vi、查找等功能(低行模式也可以看作是命令模式里的)。
+一、打开文件、保存、关闭文件(vi命令模式下使用)
+
+vi">
     
     
     
@@ -81,15 +82,15 @@ wget http://download.redis.io/redis-stable.t">
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2014/12/20/centos6下安装redis/" title="centos6下安装redis" itemprop="url">centos6下安装redis</a>
+      <a href="/2014/12/27/vi基本操作/" title="vi基本操作" itemprop="url">vi基本操作</a>
   </h1>
   <p class="article-author">By
     
       <a href="www.lkh.im" title="hang">hang</a>
     </p>
   <p class="article-time">
-    <time datetime="2014-12-20T06:46:11.000Z" itemprop="datePublished">12月 20 2014</time>
-    更新日期:<time datetime="2014-12-27T06:12:53.000Z" itemprop="dateModified">12月 27 2014</time>
+    <time datetime="2014-12-27T07:42:37.000Z" itemprop="datePublished">12月 27 2014</time>
+    更新日期:<time datetime="2014-12-27T07:52:04.000Z" itemprop="dateModified">12月 27 2014</time>
     
   </p>
 </header>
@@ -98,78 +99,68 @@ wget http://download.redis.io/redis-stable.t">
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		
+		<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">vi有3个模式：插入模式、命令模式、低行模式。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">一、打开文件、保存、关闭文件(vi命令模式下使用)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">二、插入文本或行(vi命令模式下使用，执行下面命令后将进入插入模式，按ESC键可退出插入模式)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">4.</span> <span class="toc-text">三、移动光标(vi命令模式下使用)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">5.</span> <span class="toc-text">四、删除、恢复字符或行(vi命令模式下使用)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">6.</span> <span class="toc-text">五、搜索(vi命令模式下使用)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">7.</span> <span class="toc-text">六、跳至指定行(vi命令模式下使用)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">8.</span> <span class="toc-text">七、设置行号(vi命令模式下使用)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">9.</span> <span class="toc-text">八、复制、粘贴(vi命令模式下使用)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">10.</span> <span class="toc-text">九、替换(vi命令模式下使用)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">11.</span> <span class="toc-text">十、编辑其他文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">12.</span> <span class="toc-text">十一、修改文件格式</span></a></li></ol>
 		</div>
 		
-		<p>安装ridis前，先安装gcc和tcl</p>
-<p>gcc的安装:</p>
-<pre><code><span class="comment">yum</span> <span class="comment">install</span> <span class="comment">gcc</span><span class="literal">-</span><span class="comment">c</span><span class="literal">+</span><span class="literal">+</span>
-</code></pre><p>tcl的安装:</p>
-<pre><code>yum install -<span class="keyword">y</span> <span class="keyword">tcl</span>
-</code></pre><p>安装完成后，开始安装redis，先下载redis的源码并编译</p>
-<pre><code><span class="title">wget</span> <span class="url">http://download.redis.io/redis-stable.tar.gz</span>
+		<h3>vi有3个模式：插入模式、命令模式、低行模式。</h3>
 
-tar xvzf redis-stable.tar.gz
+<pre><code>插入模式：在此模式下可以输入字符，按ESC将回到命令模式。
+命令模式：可以移动光标、删除字符等。
+低行模式：可以保存文件、退出<span class="keyword">vi</span>、设置<span class="keyword">vi</span>、查找等功能(低行模式也可以看作是命令模式里的)。
+</code></pre><h3>一、打开文件、保存、关闭文件(vi命令模式下使用)</h3>
 
-cd redis-stable
+<p>vi filename       //打开filename文件<br>:w       //保存文件<br>:w vpser.net        //保存至vpser.net文件<br>:q          //退出编辑器，如果文件已修改请使用下面的命令<br>:q!        //退出编辑器，且不保存<br>:wq         //退出编辑器，且保存文件</p>
+<h3>二、插入文本或行(vi命令模式下使用，执行下面命令后将进入插入模式，按ESC键可退出插入模式)</h3>
 
-make
-</code></pre><p>在make成功以后，会在src目录下多出一些可执行文件：redis-server，redis-cli等等。</p>
-<p>方便期间用cp命令复制到usr目录下运行。</p>
-<pre><code>cp redis-server <span class="regexp">/usr/</span>local<span class="regexp">/bin/</span>
+<p>a      //在当前光标位置的右边添加文本<br>i       //在当前光标位置的左边添加文本<br>A     //在当前行的末尾位置添加文本<br>I      //在当前行的开始处添加文本(非空字符的行首)<br>O     //在当前行的上面新建一行<br>o     //在当前行的下面新建一行<br>R    //替换(覆盖)当前光标位置及后面的若干文本<br>J    //合并光标所在行及下一行为一行(依然在命令模式)</p>
+<h3>三、移动光标(vi命令模式下使用)</h3>
 
-cp redis-cli <span class="regexp">/usr/</span>local<span class="regexp">/bin/</span>
-</code></pre><p>然后新建目录，存放配置文件</p>
-<pre><code><span class="built_in">mkdir</span> /etc/redis
+<p>1、使用上下左右方向键</p>
+<p>2、命令模式下：h   向左、j   向下 、k   向上、l  向右。<br>空格键 向右、Backspace  向左、Enter  移动到下一行首、-  移动到上一行首。</p>
+<h3>四、删除、恢复字符或行(vi命令模式下使用)</h3>
 
-<span class="built_in">mkdir</span> /var/redis
+<p>x         //删除当前字符<br>nx         //删除从光标开始的n个字符<br>dd      //删除当前行<br>ndd   //向下删除当前行在内的n行<br>u       //撤销上一步操作<br>U      //撤销对当前行的所有操作</p>
+<h3>五、搜索(vi命令模式下使用)</h3>
 
-<span class="built_in">mkdir</span> /var/redis/<span class="built_in">log</span>
+<p>/vpser     //向光标下搜索vpser字符串<br>?vpser     //向光标上搜索vpser字符串<br>n           //向下搜索前一个搜素动作<br>N         //向上搜索前一个搜索动作</p>
+<h3>六、跳至指定行(vi命令模式下使用)</h3>
 
-<span class="built_in">mkdir</span> /var/redis/run
+<p>n+        //向下跳n行<br>n-         //向上跳n行<br>nG        //跳到行号为n的行<br>G           //跳至文件的底部</p>
+<h3>七、设置行号(vi命令模式下使用)</h3>
 
-<span class="built_in">mkdir</span> /var/redis/<span class="number">6379</span>
-</code></pre><p>在redis解压根目录中找到配置文件模板，复制到如下位置。</p>
-<pre><code><span class="keyword">cp</span> redis.<span class="keyword">conf</span> /etc/redis/<span class="number">6379</span>.<span class="keyword">conf</span>
-</code></pre><p>通过vim命令修改 /etc/redis/6379.conf</p>
-<pre><code>    daemonize yes
+<p>:set  nu     //显示行号<br>:set nonu    //取消显示行号</p>
+<h3>八、复制、粘贴(vi命令模式下使用)</h3>
 
-    pidfile <span class="regexp">/var/</span>redis<span class="regexp">/run/</span>redis_6379.pid
+<p>yy    //将当前行复制到缓存区，也可以用 “ayy 复制，”a 为缓冲区，a也可以替换为a到z的任意字母，可以完成多个复制任务。<br>nyy   //将当前行向下n行复制到缓冲区，也可以用 “anyy 复制，”a 为缓冲区，a也可以替换为a到z的任意字母，可以完成多个复制任务。<br>yw    //复制从光标开始到词尾的字符。<br>nyw   //复制从光标开始的n个单词。<br>y^      //复制从光标到行首的内容。  VPS侦探<br>y$      //复制从光标到行尾的内容。<br>p        //粘贴剪切板里的内容在光标后，如果使用了前面的自定义缓冲区，建议使用”ap 进行粘贴。<br>P        //粘贴剪切板里的内容在光标前，如果使用了前面的自定义缓冲区，建议使用”aP 进行粘贴。</p>
+<h3>九、替换(vi命令模式下使用)</h3>
 
-    logfile <span class="regexp">/var/</span>redis<span class="regexp">/log/</span>redis_6379.log
+<p>:s/old/new      //用new替换行中首次出现的old<br>:s/old/new/g         //用new替换行中所有的old<br>:n,m s/old/new/g     //用new替换从n到m行里所有的old<br>:%s/old/new/g      //用new替换当前文件里所有的old</p>
+<h3>十、编辑其他文件</h3>
 
-    dir <span class="regexp">/var/</span>redis<span class="regexp">/6379</span>
-</code></pre><p>最后运行redis：       </p>
-<pre><code>$ redis-server /etc/redis/<span class="number">6379</span>.<span class="keyword">conf</span> 
-</code></pre><p>检查Redis是否在工作？</p>
-<pre><code><span class="variable">$redis</span>-cli
-</code></pre><p>这将打开一个Redis提示，如下所示：</p>
-<pre><code><span class="title">redis</span> <span class="number">127.0.0.1:6379</span>&gt;
-</code></pre><p>上面的提示127.0.0.1是本机的IP地址，6379为Redis服务器运行的端口。<br>现在输入PING命令，如下所示。</p>
-<pre><code>    <span class="title">redis</span> <span class="number">127.0.0.1:6379</span>&gt; ping
-    PONG
-</code></pre><p>这说明你已经成功安装redis。</p>
-<p>参考:   <a href="http://www.cnblogs.com/haoxinyue/p/3620648.html" target="_blank" rel="external">http://www.cnblogs.com/haoxinyue/p/3620648.html</a></p>
+<p>:e otherfilename    //编辑文件名为otherfilename的文件。</p>
+<h3>十一、修改文件格式</h3>
+
+<p>:set fileformat=unix   //将文件修改为unix格式，如win下面的文本文件在linux下会出现^M。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/redis/">redis</a><a href="/tags/centos/">centos</a><a href="/tags/cache/">cache</a>
+  <span></span> <a href="/tags/linux/">linux</a><a href="/tags/vi/">vi</a>
   </div>
 
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/缓存/">缓存</a>
+  <a class="article-category-link" href="/categories/linux/">linux</a>
 </div>
 
 
 
 <div class="article-share" id="share">
 
-  <div data-url="www.lkh.im/2014/12/20/centos6下安装redis/" data-title="centos6下安装redis | Hang&#39;s blog" data-tsina="null" class="share clearfix">
+  <div data-url="www.lkh.im/2014/12/27/vi基本操作/" data-title="vi基本操作 | Hang&#39;s blog" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -178,19 +169,11 @@ cp redis-cli <span class="regexp">/usr/</span>local<span class="regexp">/bin/</s
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2014/12/27/LVS-三种工作模式原理、以及优缺点比较/" title="LVS 三种工作模式原理、以及优缺点比较">
-  <strong>PREVIOUS:</strong><br/>
-  <span>
-  LVS 三种工作模式原理、以及优缺点比较</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2014/12/20/redis的5种数据类型及基本操作/"  title="redis的5种数据类型及基本操作">
+<a href="/2014/12/27/LVS-三种工作模式原理、以及优缺点比较/"  title="LVS 三种工作模式原理、以及优缺点比较">
  <strong>NEXT:</strong><br/> 
- <span>redis的5种数据类型及基本操作
+ <span>LVS 三种工作模式原理、以及优缺点比较
 </span>
 </a>
 </div>
@@ -207,7 +190,7 @@ cp redis-cli <span class="regexp">/usr/</span>local<span class="regexp">/bin/</s
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  
+  <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">vi有3个模式：插入模式、命令模式、低行模式。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">一、打开文件、保存、关闭文件(vi命令模式下使用)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">二、插入文本或行(vi命令模式下使用，执行下面命令后将进入插入模式，按ESC键可退出插入模式)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">4.</span> <span class="toc-text">三、移动光标(vi命令模式下使用)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">5.</span> <span class="toc-text">四、删除、恢复字符或行(vi命令模式下使用)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">6.</span> <span class="toc-text">五、搜索(vi命令模式下使用)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">7.</span> <span class="toc-text">六、跳至指定行(vi命令模式下使用)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">8.</span> <span class="toc-text">七、设置行号(vi命令模式下使用)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">9.</span> <span class="toc-text">八、复制、粘贴(vi命令模式下使用)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">10.</span> <span class="toc-text">九、替换(vi命令模式下使用)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">11.</span> <span class="toc-text">十、编辑其他文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">12.</span> <span class="toc-text">十一、修改文件格式</span></a></li></ol>
   </div>
 
 <div id="asidepart">
