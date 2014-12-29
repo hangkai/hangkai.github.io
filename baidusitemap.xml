@@ -4,7 +4,7 @@
     
   <url>
     <loc>www.lkh.im/2014/12/29/%E4%BD%BF%E7%94%A8Lock%E5%90%8C%E6%AD%A5%E4%BB%A3%E7%A0%81%E5%9D%97/</loc>
-    <lastmod>2014-12-29T08:52:25.000Z</lastmod>
+    <lastmod>2014-12-29T08:53:37.000Z</lastmod>
     <data>
         <display>
         <title>使用Lock同步代码块</title>
@@ -64,20 +64,22 @@ import java.util.concurrent.locks.ReentrantLock;
 
 }
 </code></pre><h1 id="创建10个Job对象，并且使用10个线程来运行它们"><h4>创建10个Job对象，并且使用10个线程来运行它们</h4></h1>
-<p>package com.hang.thread.lock;</p>
-<p>public class Main {</p>
-<pre><code>    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span>(String[] args) {
-        PrintQueue printQueue = <span class="keyword">new</span> PrintQueue();<span class="comment">//创建一个共享的PrintQueue对象</span>
-        Thread thread[] = <span class="keyword">new</span> Thread[<span class="number">10</span>];
-        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) {
-            thread[i] = <span class="keyword">new</span> Thread(<span class="keyword">new</span> Job(printQueue), <span class="string">"Thread "</span> + i);
-        }
-        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) {
-            thread[i].start();
-        }
-    }
+<pre><code>package com.hang.thread.<span class="keyword">lock</span>;
 
-}
+<span class="keyword">public</span> <span class="keyword">class</span> Main {
+
+        <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span>(String[] args) {
+            PrintQueue printQueue = <span class="keyword">new</span> PrintQueue();<span class="comment">//创建一个共享的PrintQueue对象</span>
+            Thread thread[] = <span class="keyword">new</span> Thread[<span class="number">10</span>];
+            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) {
+                thread[i] = <span class="keyword">new</span> Thread(<span class="keyword">new</span> Job(printQueue), <span class="string">"Thread "</span> + i);
+            }
+            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) {
+                thread[i].start();
+            }
+        }
+
+    }
 </code></pre>]]></content>
          
          
