@@ -7,20 +7,14 @@
   <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8" />
 <meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88" />
   
-    <title>redis的5种数据类型及基本操作 | Hang&#39;s blog</title>
+    <title>使用Lock同步代码块 | Hang&#39;s blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="hang">
     
-    <meta name="description" content="Redis支持5种类型的数据类型
-1.字符串
-Redis字符串是字节序列。Redis字符串是二进制安全的，这意味着他们有一个已知的长度没有任何特殊字符终止，所以你可以存储任何东西，512兆为上限。
-例子
-redis 127.0.0.1:6379&amp;gt; SET name &quot;hang&quot;
-
-OK
-
-re">
+    <meta name="description" content="使用Lock同步代码块
+Java提供另外的机制用来同步代码块。它比synchronized关键字更加强大、灵活。它是基于Lock接口和实现它的类（如ReentrantLock）。这种机制有如下优势：
+它允许以一种更灵活的方式来构建synchronized块。使用synchronized关键字，你必须">
     
     
     
@@ -83,15 +77,15 @@ re">
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2014/12/20/redis的5种数据类型及基本操作/" title="redis的5种数据类型及基本操作" itemprop="url">redis的5种数据类型及基本操作</a>
+      <a href="/2014/12/29/使用Lock同步代码块/" title="使用Lock同步代码块" itemprop="url">使用Lock同步代码块</a>
   </h1>
   <p class="article-author">By
     
       <a href="www.lkh.im" title="hang">hang</a>
     </p>
   <p class="article-time">
-    <time datetime="2014-12-20T06:36:17.000Z" itemprop="datePublished">12月 20 2014</time>
-    更新日期:<time datetime="2014-12-27T06:13:44.000Z" itemprop="dateModified">12月 27 2014</time>
+    <time datetime="2014-12-29T08:47:54.000Z" itemprop="datePublished">12月 29 2014</time>
+    更新日期:<time datetime="2014-12-29T08:49:21.000Z" itemprop="dateModified">12月 29 2014</time>
     
   </p>
 </header>
@@ -100,161 +94,96 @@ re">
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Redis支持5种类型的数据类型"><span class="toc-number">1.</span> <span class="toc-text">Redis支持5种类型的数据类型</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-字符串"><span class="toc-number"></span> <span class="toc-text">1.字符串</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-哈希"><span class="toc-number"></span> <span class="toc-text">2.哈希</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-列表"><span class="toc-number"></span> <span class="toc-text">3.列表</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-集合"><span class="toc-number"></span> <span class="toc-text">4.集合</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-_Redis有序集"><span class="toc-number"></span> <span class="toc-text">5. Redis有序集</span></a>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#创建PrintQueue类，来实现打印队列"><span class="toc-number">1.</span> <span class="toc-text">创建PrintQueue类，来实现打印队列</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.0.0.1.</span> <span class="toc-text">创建PrintQueue类，来实现打印队列</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#创建一个Job类，并指定它实现Runnable接口"><span class="toc-number">2.</span> <span class="toc-text">创建一个Job类，并指定它实现Runnable接口</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">2.0.0.1.</span> <span class="toc-text">创建一个Job类，并指定它实现Runnable接口</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#创建10个Job对象，并且使用10个线程来运行它们"><span class="toc-number">3.</span> <span class="toc-text">创建10个Job对象，并且使用10个线程来运行它们</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">3.0.0.1.</span> <span class="toc-text">创建10个Job对象，并且使用10个线程来运行它们</span></a></li></ol></li></ol></li></ol></li></ol>
 		</div>
 		
-		<h2 id="Redis支持5种类型的数据类型">Redis支持5种类型的数据类型</h2>
-<h1 id="1-字符串">1.字符串</h1>
-<p>Redis字符串是字节序列。Redis字符串是二进制安全的，这意味着他们有一个已知的长度没有任何特殊字符终止，所以你可以存储任何东西，512兆为上限。</p>
-<p>例子</p>
-<pre><code><span class="input"><span class="prompt">redis 127.0.0.1:6379&gt;</span> <span class="constant">SET</span> name <span class="string">"hang"</span></span>
-<span class="input"><span class="prompt">
-OK
+		<p>使用Lock同步代码块</p>
+<p>Java提供另外的机制用来同步代码块。它比synchronized关键字更加强大、灵活。它是基于Lock接口和实现它的类（如ReentrantLock）。这种机制有如下优势：</p>
+<pre><code>它允许以一种更灵活的方式来构建<span class="keyword">synchronized</span>块。使用<span class="keyword">synchronized</span>关键字，你必须以结构化方式得到释放<span class="keyword">synchronized</span>代码块的控制权。Lock接口允许你获得更复杂的结构来实现你的临界区。
+Lock 接口比<span class="keyword">synchronized</span>关键字提供更多额外的功能。新功能之一是实现的tryLock()方法。这种方法试图获取锁的控制权并且如果它不能获取该锁，是因为其他线程在使用这个锁，它将返回这个锁。使用<span class="keyword">synchronized</span>关键字，当线程A试图执行<span class="keyword">synchronized</span>代码块，如果线程B正在执行它，那么线程A将阻塞直到线程B执行完<span class="keyword">synchronized</span>代码块。使用锁，你可以执行tryLock()方法，这个方法返回一个 <span class="keyword">Boolean</span>值表示，是否有其他线程正在运行这个锁所保护的代码。
+当有多个读者和一个写者时，Lock接口允许读写操作分离。
+Lock接口比<span class="keyword">synchronized</span>关键字提供更好的性能。
+</code></pre><h1 id="创建PrintQueue类，来实现打印队列"><h4>创建PrintQueue类，来实现打印队列</h4></h1>
+<pre><code>package com.hang.thread.<span class="keyword">lock</span>;
 
-redis 127.0.0.1:6379&gt;</span> <span class="constant">GET</span> name</span>
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
-<span class="string">"hang"</span>
-</code></pre><h1 id="2-哈希">2.哈希</h1>
-<p>Redis的哈希是键值对的集合。 Redis的哈希值是字符串字段和字符串值之间的映射，因此它们被用来表示对象</p>
-<p>例子</p>
-<pre><code><span class="input"><span class="prompt">redis 127.0.0.1:6379&gt;</span> <span class="constant">HMSET</span> <span class="symbol">user:</span><span class="number">1</span> username hang password hang points <span class="number">200</span></span>
-<span class="input"><span class="prompt">
-OK
+<span class="keyword">public</span> <span class="keyword">class</span> PrintQueue {
 
-redis 127.0.0.1:6379&gt;</span> <span class="constant">HGETALL</span> <span class="symbol">user:</span><span class="number">1</span></span>
+    <span class="keyword">private</span> final Lock queueLock=<span class="keyword">new</span> ReentrantLock();<span class="comment">//声明一个Lock对象，并且使用ReentrantLock类的一个新对象来初始化它。</span>
 
-<span class="number">1</span>) <span class="string">"username"</span>
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title">printJob</span>(Object document){<span class="comment">//实现printJob()方法，它将接收Object对象作为参数，并且不会返回任何值。</span>
+        queueLock.<span class="keyword">lock</span>();<span class="comment">//在printJob()方法内部，通过调用lock()方法来获取Lock对象的控制权。</span>
+        <span class="keyword">try</span> {<span class="comment">//包含以下代码来模拟文档的打印：</span>
+            Long duration=(<span class="keyword">long</span>)(Math.random()*<span class="number">10000</span>);
+            System.<span class="keyword">out</span>.println(Thread.currentThread().getName()+ <span class="string">": PrintQueue: Printing a Job during "</span>+(duration/<span class="number">1000</span>)+
+            <span class="string">" seconds"</span>);
+            Thread.sleep(duration);
+        } <span class="keyword">catch</span> (InterruptedException e) {
+            e.printStackTrace();
+        }<span class="keyword">finally</span> {
+            queueLock.unlock();<span class="comment">//通过调用unlock()方法来释放Lock对象的控制</span>
+        }
+    }
 
-<span class="number">2</span>) <span class="string">"hang"</span>
+}
+</code></pre><h1 id="创建一个Job类，并指定它实现Runnable接口"><h4>创建一个Job类，并指定它实现Runnable接口</h4></h1>
+<pre><code><span class="keyword">package</span> com.hang.thread.lock;
 
-<span class="number">3</span>) <span class="string">"password"</span>
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Job</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>{
 
-<span class="number">4</span>) <span class="string">"hang"</span>
+    <span class="keyword">private</span> PrintQueue printQueue;<span class="comment">//声明一个PrintQueue类的对象，并通过实现类（Job类）的构造器来初始化这个对象。</span>
 
-<span class="number">5</span>) <span class="string">"points"</span>
+    <span class="keyword">public</span> <span class="title">Job</span>(PrintQueue printQueue) {
+        <span class="keyword">this</span>.printQueue = printQueue;
+    }
 
-<span class="number">6</span>) <span class="string">"200"</span>
-</code></pre><p>在上面的例子中的哈希数据类型，用于存储其中包含的用户的基本信息用户的对象。这里HMSET，HEGTALL用户命令user:1是键。可以理解成user类id=1的实例</p>
-<h1 id="3-列表">3.列表</h1>
-<p>Redis的列表是简单的字符串列表，排序插入顺序。您可以添加元素到Redis的列表的头部或尾部。</p>
-<p>例子</p>
-<pre><code><span class="input"><span class="prompt">redis 127.0.0.1:6379&gt;</span> lpush tutoriallist redis</span>
-<span class="input"><span class="prompt">
-(integer) 1
+    <span class="annotation">@Override</span>
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span>() {<span class="comment">//实现run()方法，它使用PrintQueue对象来发送一个打印任务。</span>
+        System.out.printf(<span class="string">"%s: Going to print a document\n"</span>, Thread.
+                currentThread().getName());
+        printQueue.printJob(<span class="keyword">new</span> Object());
+        System.out.printf(<span class="string">"%s: The document has been printed\n"</span>,
+                Thread.currentThread().getName());
+    }
 
-redis 127.0.0.1:6379&gt;</span> lpush tutoriallist mongodb</span>
-<span class="input"><span class="prompt">
-(integer) 2
+}
+</code></pre><h1 id="创建10个Job对象，并且使用10个线程来运行它们"><h4>创建10个Job对象，并且使用10个线程来运行它们</h4></h1>
+<p>package com.hang.thread.lock;</p>
+<p>public class Main {</p>
+<pre><code>    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span>(String[] args) {
+        PrintQueue printQueue = <span class="keyword">new</span> PrintQueue();<span class="comment">//创建一个共享的PrintQueue对象</span>
+        Thread thread[] = <span class="keyword">new</span> Thread[<span class="number">10</span>];
+        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) {
+            thread[i] = <span class="keyword">new</span> Thread(<span class="keyword">new</span> Job(printQueue), <span class="string">"Thread "</span> + i);
+        }
+        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++) {
+            thread[i].start();
+        }
+    }
 
-redis 127.0.0.1:6379&gt;</span> lpush tutoriallist rabitmq</span>
-<span class="input"><span class="prompt">
-(integer) 3
-
-redis 127.0.0.1:6379&gt;</span> lrange tutoriallist <span class="number">0</span> <span class="number">10</span></span>
-
-<span class="number">1</span>) <span class="string">"rabitmq"</span>
-
-<span class="number">2</span>) <span class="string">"mongodb"</span>
-
-<span class="number">3</span>) <span class="string">"redis"</span>
-</code></pre><p>列表的最大长度为 232 - 1 元素（4294967295，每个列表中可容纳超过4十亿的元素），改类型可以理解为java中的list集合</p>
-<h1 id="4-集合">4.集合</h1>
-<p>Redis的集合是字符串的无序集合。在Redis您可以添加，删除和测试文件是否存在，在成员O（1）的时间复杂度。</p>
-<p>例子</p>
-<pre><code><span class="input"><span class="prompt">redis 127.0.0.1:6379&gt;</span> sadd tutoriallist2 redis</span>
-<span class="input"><span class="prompt">
-(integer) 1
-
-redis 127.0.0.1:6379&gt;</span> sadd tutoriallist2 mongodb</span>
-<span class="input"><span class="prompt">
-(integer) 1
-
-redis 127.0.0.1:6379&gt;</span> sadd tutoriallist2 rabitmq</span>
-<span class="input"><span class="prompt">
-(integer) 1
-
-redis 127.0.0.1:6379&gt;</span> sadd tutoriallist2 rabitmq</span>
-<span class="input"><span class="prompt">
-(integer) 0
-
-redis 127.0.0.1:6379&gt;</span> smembers tutoriallist2 </span>
-
-<span class="number">1</span>) <span class="string">"rabitmq"</span>
-
-<span class="number">2</span>) <span class="string">"mongodb"</span>
-
-<span class="number">3</span>) <span class="string">"redis"</span>
-</code></pre><p>注意：在上面的例子中rabitmq集合添加加两次，但由于集合元素具有唯一属性，该类型可以理解为java中的hashset集合</p>
-<p>集合中的元素最大数量为 232 - 1 （4294967295，可容纳超过4十亿元素）。</p>
-<h1 id="5-_Redis有序集">5. Redis有序集</h1>
-<p>Redis的有序集合类似Redis的集合存储在设定值具有唯一性。不同的是，一个有序集合的每个成员用分数，以便采取有序set命令，从最小的到最大的分数有关。</p>
-<p>在Redis的有序set添加，删除和测试存在成员O（1）（固定时间，无论里面包含集合元素的数量）。列表的最大长度为 232 - 1 个元素（每集合超过4294967295元素）。</p>
-<p>例子</p>
-<pre><code><span class="input"><span class="prompt">redis 127.0.0.1:6379&gt;</span> <span class="constant">ZADD</span> tutorials3 <span class="number">1</span> redis</span>
-<span class="input"><span class="prompt">
-(integer) 1
-
-redis 127.0.0.1:6379&gt;</span> <span class="constant">ZADD</span> tutorials3 <span class="number">2</span> mongodb</span>
-<span class="input"><span class="prompt">
-(integer) 1
-
-redis 127.0.0.1:6379&gt;</span> <span class="constant">ZADD</span> tutorials3 <span class="number">3</span> mysql</span>
-<span class="input"><span class="prompt">
-(integer) 1
-
-redis 127.0.0.1:6379&gt;</span> <span class="constant">ZADD</span> tutorials3 <span class="number">3</span> mysql</span>
-<span class="input"><span class="prompt">
-(integer) 0
-
-redis 127.0.0.1:6379&gt;</span> <span class="constant">ZADD</span> tutorials3 <span class="number">4</span> mysql</span>
-<span class="input"><span class="prompt">
-(integer) 0
-
-redis 127.0.0.1:6379&gt;</span> <span class="constant">ZRANGE</span> tutorials3 <span class="number">0</span> <span class="number">10</span> <span class="constant">WITHSCORES</span></span>
-
-
-
-<span class="number">1</span>) <span class="string">"redis"</span>
-
-<span class="number">2</span>) <span class="string">"1"</span>
-
-<span class="number">3</span>) <span class="string">"mongodb"</span>
-
-<span class="number">4</span>) <span class="string">"2"</span>
-
-<span class="number">5</span>) <span class="string">"mysql"</span>
-
-<span class="number">6</span>) <span class="string">"4"</span>
-</code></pre><p>在上述例子中的三个值被命令ZADD插入其得分在redis的有序集命名为tutorials3。最终打印出每个元素以及对应的下标。</p>
-<p>也可以只遍历出集合的元素</p>
-<pre><code><span class="input"><span class="prompt">redis 127.0.0.1:6379&gt;</span> <span class="constant">ZRANGEBYSCORE</span> tutoriallist3 <span class="number">0</span> <span class="number">1000</span></span>
-
-<span class="number">1</span>) <span class="string">"redis"</span>
-
-<span class="number">2</span>) <span class="string">"mongodb"</span>
-
-<span class="number">3</span>) <span class="string">"rabitmq"</span>
-</code></pre><p>该类型可以理解为java中的linkedhashset</p>
-  
+}
+</code></pre>  
 	</div>
 		<footer class="article-footer clearfix">
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/redis/">redis</a><a href="/tags/缓存/">缓存</a><a href="/tags/cache/">cache</a>
+  <span></span> <a href="/tags/多线程/">多线程</a><a href="/tags/lock/">lock</a>
   </div>
 
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/缓存/">缓存</a>
+  <a class="article-category-link" href="/categories/多线程/">多线程</a>
 </div>
 
 
 
 <div class="article-share" id="share">
 
-  <div data-url="www.lkh.im/2014/12/20/redis的5种数据类型及基本操作/" data-title="redis的5种数据类型及基本操作 | Hang&#39;s blog" data-tsina="null" class="share clearfix">
+  <div data-url="www.lkh.im/2014/12/29/使用Lock同步代码块/" data-title="使用Lock同步代码块 | Hang&#39;s blog" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -263,19 +192,11 @@ redis 127.0.0.1:6379&gt;</span> <span class="constant">ZRANGE</span> tutorials3 
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2014/12/20/centos6下安装redis/" title="centos6下安装redis">
-  <strong>PREVIOUS:</strong><br/>
-  <span>
-  centos6下安装redis</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2014/12/20/virtualbox复制centos虚拟机/"  title="virtualbox复制centos虚拟机">
+<a href="/2014/12/27/vi基本操作/"  title="vi基本操作">
  <strong>NEXT:</strong><br/> 
- <span>virtualbox复制centos虚拟机
+ <span>vi基本操作
 </span>
 </a>
 </div>
@@ -292,7 +213,7 @@ redis 127.0.0.1:6379&gt;</span> <span class="constant">ZRANGE</span> tutorials3 
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Redis支持5种类型的数据类型"><span class="toc-number">1.</span> <span class="toc-text">Redis支持5种类型的数据类型</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#1-字符串"><span class="toc-number"></span> <span class="toc-text">1.字符串</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2-哈希"><span class="toc-number"></span> <span class="toc-text">2.哈希</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3-列表"><span class="toc-number"></span> <span class="toc-text">3.列表</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4-集合"><span class="toc-number"></span> <span class="toc-text">4.集合</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5-_Redis有序集"><span class="toc-number"></span> <span class="toc-text">5. Redis有序集</span></a>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#创建PrintQueue类，来实现打印队列"><span class="toc-number">1.</span> <span class="toc-text">创建PrintQueue类，来实现打印队列</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">1.0.0.1.</span> <span class="toc-text">创建PrintQueue类，来实现打印队列</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#创建一个Job类，并指定它实现Runnable接口"><span class="toc-number">2.</span> <span class="toc-text">创建一个Job类，并指定它实现Runnable接口</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">2.0.0.1.</span> <span class="toc-text">创建一个Job类，并指定它实现Runnable接口</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#创建10个Job对象，并且使用10个线程来运行它们"><span class="toc-number">3.</span> <span class="toc-text">创建10个Job对象，并且使用10个线程来运行它们</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">3.0.0.1.</span> <span class="toc-text">创建10个Job对象，并且使用10个线程来运行它们</span></a></li></ol></li></ol></li></ol></li></ol>
   </div>
 
 <div id="asidepart">
