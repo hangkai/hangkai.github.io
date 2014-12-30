@@ -4,7 +4,7 @@
     
   <url>
     <loc>www.lkh.im/2014/12/30/Shell%E7%BC%96%E7%A8%8B%E6%9E%81%E7%AE%80%E5%85%A5%E9%97%A8%E5%AE%9E%E8%B7%B5/</loc>
-    <lastmod>2014-12-30T09:29:38.000Z</lastmod>
+    <lastmod>2014-12-30T09:31:43.000Z</lastmod>
     <data>
         <display>
         <title>Shell编程极简入门实践</title>
@@ -406,7 +406,8 @@ just some random <span class="keyword">text</span><span class="comment">' test-2
         <span class="keyword">do</span>
             cp <span class="variable">$F</span> ../repo/<span class="variable">$F</span>
         <span class="keyword">done</span>
-</code></pre>]]></content>
+</code></pre><p>原文地址：<a href="https://github.com/StevenSLXie/Tutorials-for-Web-Developers/blob/master/Shell%E7%BC%96%E7%A8%8B%E6%9E%81%E7%AE%80%E5%85%A5%E9%97%A8%E5%AE%9E%E8%B7%B5.md" target="_blank" rel="external">https://github.com/StevenSLXie/Tutorials-for-Web-Developers/blob/master/Shell%E7%BC%96%E7%A8%8B%E6%9E%81%E7%AE%80%E5%85%A5%E9%97%A8%E5%AE%9E%E8%B7%B5.md</a></p>
+]]></content>
          
          
            
