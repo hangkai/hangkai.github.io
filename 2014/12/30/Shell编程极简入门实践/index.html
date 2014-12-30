@@ -85,7 +85,7 @@
     </p>
   <p class="article-time">
     <time datetime="2014-12-30T09:04:40.000Z" itemprop="datePublished">12月 30 2014</time>
-    更新日期:<time datetime="2014-12-30T09:28:03.000Z" itemprop="dateModified">12月 30 2014</time>
+    更新日期:<time datetime="2014-12-30T09:29:38.000Z" itemprop="dateModified">12月 30 2014</time>
     
   </p>
 </header>
@@ -433,52 +433,62 @@ just some random <span class="keyword">text</span><span class="comment">' test-2
 <p>将改动后的文件，拷贝一份到任意一个新的文件夹。</p>
 <p>请注意，这当中会出现一些我们没学到的知识，如果你发现现有的知识不足以解决问题的话，请Google之。</p>
 <p>下面是我写的脚本，为了便于理解，我将各个命令都分开写了。</p>
-<pre><code><span class="shebang">#!/bin/bash</span>
-mkdir final
-<span class="built_in">cd</span> final
+<pre><code>    <span class="comment">#!/bin/bash</span>
+    mkdir final
+    <span class="built_in">cd</span> final
 
-<span class="keyword">declare</span> <span class="operator">-a</span> NAME
-NAME=(<span class="number">1</span> <span class="number">2</span> <span class="number">3</span> <span class="number">4</span> <span class="number">5</span> <span class="number">6</span> <span class="number">7</span> <span class="number">8</span> <span class="number">9</span> <span class="number">10</span>)
+    <span class="keyword">declare</span> <span class="operator">-a</span> NAME
+    NAME=(<span class="number">1</span> <span class="number">2</span> <span class="number">3</span> <span class="number">4</span> <span class="number">5</span> <span class="number">6</span> <span class="number">7</span> <span class="number">8</span> <span class="number">9</span> <span class="number">10</span>)
 
 
-<span class="comment"># 创建新文件。</span>
+    <span class="comment"># 创建新文件。</span>
 
-<span class="keyword">for</span> I <span class="keyword">in</span> <span class="variable">${NAME[*]}</span>
-    <span class="keyword">do</span>
-        touch final-test-<span class="variable">${I}</span>.txt
-    <span class="keyword">done</span>
-</code></pre><p>  ‘# 往文档写入。这里使用的是echo，通过<code>&gt;</code>改变其默认输出。不妨思考一下如果用sed来实现会有什么问题？</p>
-<pre><code><span class="keyword">for</span> F <span class="keyword">in</span> final-test-*.txt
-    <span class="keyword">do</span>
-        <span class="built_in">echo</span> <span class="string">'This is a test file...!!'</span> &gt; <span class="variable">$F</span>
-    <span class="keyword">done</span>
-</code></pre><p> ‘# 文件名首字母大写。注意echo和sed的连用，以及我们引用命令的一种新方法$(command)。还有mv这个新命令。</p>
-<pre><code><span class="keyword">for</span> F <span class="keyword">in</span> final-test-*.txt
-    <span class="keyword">do</span>
-        NEW=$(<span class="built_in">echo</span> <span class="string">"<span class="variable">$F</span>"</span> | sed <span class="operator">-e</span> <span class="string">'s/^./F/'</span>)
-        mv <span class="string">"<span class="variable">$F</span>"</span> <span class="string">"<span class="variable">$NEW</span>"</span>
-    <span class="keyword">done</span>
-</code></pre><p> ‘# 删除标点。</p>
-<pre><code><span class="keyword">for</span> F <span class="keyword">in</span> *.txt
-    <span class="keyword">do</span>
-        sed -i.tmp <span class="string">'s/...!!$//'</span> <span class="variable">$F</span>
-    <span class="keyword">done</span>
-</code></pre><p> ‘# 大写。注意tr的使用。</p>
-<pre><code><span class="keyword">for</span> F <span class="keyword">in</span> *.txt
-    <span class="keyword">do</span>
-        tr <span class="string">'[:lower:]'</span> <span class="string">'[:upper:]'</span> &lt; <span class="variable">$F</span> &gt; FILE2
-        mv FILE2 <span class="variable">$F</span>
-    <span class="keyword">done</span>
+    <span class="keyword">for</span> I <span class="keyword">in</span> <span class="variable">${NAME[*]}</span>
+        <span class="keyword">do</span>
+            touch final-test-<span class="variable">${I}</span>.txt
+        <span class="keyword">done</span>
 
-<span class="built_in">cd</span> ../
-mkdir repo
+  <span class="comment"># 往文档写入。这里使用的是echo，通过`&gt;`改变其默认输出。不妨思考一下如果用sed来实现会有什么问题？</span>
 
-<span class="built_in">cd</span> final
-</code></pre><p> ‘# 复制文件。</p>
-<pre><code><span class="keyword">for</span> F <span class="keyword">in</span> *.txt
-    <span class="keyword">do</span>
-        cp <span class="variable">$F</span> ../repo/<span class="variable">$F</span>
-    <span class="keyword">done</span>
+    <span class="keyword">for</span> F <span class="keyword">in</span> final-test-*.txt
+        <span class="keyword">do</span>
+            <span class="built_in">echo</span> <span class="string">'This is a test file...!!'</span> &gt; <span class="variable">$F</span>
+        <span class="keyword">done</span>
+
+ <span class="comment"># 文件名首字母大写。注意echo和sed的连用，以及我们引用命令的一种新方法$(command)。还有mv这个新命令。</span>
+
+    <span class="keyword">for</span> F <span class="keyword">in</span> final-test-*.txt
+        <span class="keyword">do</span>
+            NEW=$(<span class="built_in">echo</span> <span class="string">"<span class="variable">$F</span>"</span> | sed <span class="operator">-e</span> <span class="string">'s/^./F/'</span>)
+            mv <span class="string">"<span class="variable">$F</span>"</span> <span class="string">"<span class="variable">$NEW</span>"</span>
+        <span class="keyword">done</span>
+
+ <span class="comment"># 删除标点。</span>
+
+    <span class="keyword">for</span> F <span class="keyword">in</span> *.txt
+        <span class="keyword">do</span>
+            sed -i.tmp <span class="string">'s/...!!$//'</span> <span class="variable">$F</span>
+        <span class="keyword">done</span>
+
+ <span class="comment"># 大写。注意tr的使用。</span>
+
+    <span class="keyword">for</span> F <span class="keyword">in</span> *.txt
+        <span class="keyword">do</span>
+            tr <span class="string">'[:lower:]'</span> <span class="string">'[:upper:]'</span> &lt; <span class="variable">$F</span> &gt; FILE2
+            mv FILE2 <span class="variable">$F</span>
+        <span class="keyword">done</span>
+
+    <span class="built_in">cd</span> ../
+    mkdir repo
+
+    <span class="built_in">cd</span> final
+
+ <span class="comment"># 复制文件。</span>
+
+    <span class="keyword">for</span> F <span class="keyword">in</span> *.txt
+        <span class="keyword">do</span>
+            cp <span class="variable">$F</span> ../repo/<span class="variable">$F</span>
+        <span class="keyword">done</span>
 </code></pre>  
 	</div>
 		<footer class="article-footer clearfix">
