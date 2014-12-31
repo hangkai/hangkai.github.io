@@ -3,6 +3,193 @@
 
     
   <url>
+    <loc>www.lkh.im/2014/12/31/Lock%E4%B8%AD%E4%BD%BF%E7%94%A8%E5%A4%9A%E4%B8%AA%E6%9D%A1%E4%BB%B6condition/</loc>
+    <lastmod>2014-12-31T07:56:34.000Z</lastmod>
+    <data>
+        <display>
+        <title>Lock中使用多个条件condition</title>
+        <pubTime>2014-12-31T07:53:45.000Z</pubTime>
+        
+        <tag>多线程 </tag>
+         
+        <tag>lock </tag>
+         
+        <tag>condition </tag>
+         
+         <content><![CDATA[<h3>在Lock中使用多个条件condition</h3>
+
+<p>一个锁可能伴随着多个条件。这些条件声明在Condition接口中。 这些条件的目的是允许线程拥有锁的控制并且检查条件是否为true，如果是false，那么线程将被阻塞，直到其他线程唤醒它们。Condition接口提供一种机制，阻塞一个线程和唤醒一个被阻塞的线程。</p>
+<h1 id="1-实现Buffer类，用来实现在生产者与消费者之间共享的缓冲区。"><h3>1.实现Buffer类，用来实现在生产者与消费者之间共享的缓冲区。</h3></h1>
+<blockquote>
+<p>Buffer有6个属性：<br>1.container用于存储数据，是一个list<br>2.startProduct用与控制是否生产数据的condition<br>3.startConsume用于控制是否消费数据的condition<br>4.lock，一个ReentrantLock对象，用来控制修改缓冲区代码块的访问<br>5.consumeCount消费的产品总数<br>6.maxSize最大产品数</p>
+</blockquote>
+<pre><code>package com.hang.thread.condition2;
+
+import java.util.List;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.ReentrantLock;
+
+
+<span class="comment">/**
+ * User: hang
+ * Date: 14-12-31
+ * Time: 上午10:06
+ */</span>
+<span class="keyword">public</span> <span class="keyword">class</span> Buffer {
+
+    <span class="keyword">private</span> List container = <span class="keyword">null</span>;
+    <span class="keyword">private</span> Condition startProduct;<span class="comment">//开始生产的条件</span>
+    <span class="keyword">private</span> Condition startConsume;<span class="comment">//开始消费的条件</span>
+    <span class="keyword">private</span> ReentrantLock <span class="keyword">lock</span> = <span class="keyword">null</span>;
+    <span class="keyword">private</span> <span class="keyword">int</span> consumeCount;<span class="comment">//消费的产品总数</span>
+    <span class="keyword">private</span> <span class="keyword">int</span> maxSize;<span class="comment">//最大产品数</span>
+
+    <span class="keyword">public</span> <span class="title">Buffer</span>(<span class="keyword">int</span> maxSize, List container) {
+        <span class="keyword">this</span>.maxSize = maxSize;
+        <span class="keyword">lock</span> = <span class="keyword">new</span> ReentrantLock();
+        startProduct = <span class="keyword">lock</span>.newCondition();
+        startConsume = <span class="keyword">lock</span>.newCondition();
+        <span class="keyword">this</span>.container = container;
+    }
+
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title">product</span>() {<span class="comment">//生产的方法</span>
+        <span class="keyword">lock</span>.<span class="keyword">lock</span>();
+        <span class="keyword">try</span> {
+            <span class="keyword">while</span> (container.size() == maxSize) {<span class="comment">//如果生产的数量达到最大值，先暂停生产</span>
+                System.<span class="keyword">out</span>.println(<span class="string">"产品堆积太多，先暂停生产....."</span>);
+                startProduct.<span class="keyword">await</span>();<span class="comment">//暂停生产</span>
+            }
+            <span class="keyword">this</span>.container.add(<span class="keyword">new</span> Object());
+            System.<span class="keyword">out</span>.printf(<span class="string">"%s: 剩余的产品总数: %d\n"</span>, Thread.
+                    currentThread().getName(), <span class="keyword">this</span>.container.size());
+            startConsume.signalAll();<span class="comment">//继续消费</span>
+        } <span class="keyword">catch</span> (InterruptedException e) {
+            e.printStackTrace();
+        } <span class="keyword">finally</span> {
+            <span class="keyword">lock</span>.unlock();
+        }
+    }
+
+    <span class="keyword">public</span> Object <span class="title">comsume</span>() {<span class="comment">//消费的方法</span>
+        <span class="keyword">lock</span>.<span class="keyword">lock</span>();
+        Object o = <span class="keyword">null</span>;
+        <span class="keyword">try</span> {
+            <span class="keyword">while</span> (container.size() &lt;= <span class="number">0</span>) {<span class="comment">//如果产品数=0，那么暂停消费</span>
+                System.<span class="keyword">out</span>.println(<span class="string">"缺货了，先暂停消费....."</span>);
+                startConsume.<span class="keyword">await</span>();
+            }
+            o = <span class="keyword">this</span>.container.remove(<span class="number">0</span>);
+            System.<span class="keyword">out</span>.printf(<span class="string">"%s: 消费产品总数: %d\n"</span>,Thread.
+                    currentThread().getName(),++consumeCount);
+            startProduct.signalAll();
+        } <span class="keyword">catch</span> (InterruptedException e) {
+            e.printStackTrace();
+        } <span class="keyword">finally</span> {
+            <span class="keyword">lock</span>.unlock();
+        }
+        <span class="keyword">return</span> o;
+    }
+
+}
+</code></pre><h1 id="2-实现生产者，用于往buffer中添加元素"><h3>2.实现生产者，用于往buffer中添加元素</h3></h1>
+<pre><code><span class="keyword">package</span> com.hang.thread.condition2;
+
+<span class="javadoc">/**
+ * User: hang
+ * Date: 14-12-31
+ * Time: 上午9:45
+ */</span>
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Producer</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>{
+
+    <span class="keyword">private</span> Buffer buffer;
+    <span class="keyword">private</span> <span class="keyword">int</span> count;
+
+    <span class="keyword">public</span> <span class="title">Producer</span>(Buffer buffer) {
+        <span class="keyword">this</span>.buffer = buffer;
+    }
+
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span>() {
+        <span class="keyword">try</span> {
+            <span class="keyword">while</span> (<span class="keyword">true</span>) {
+                buffer.product();
+                count++;
+                <span class="keyword">if</span> (count%<span class="number">20</span>==<span class="number">0</span>){
+        <span class="comment">//每生产20个，就暂停5秒，让消费者线程消费完所有产品，可以看到消费者进去等待消费的状态</span>
+                    Thread.currentThread().sleep(<span class="number">5000</span>);
+                }
+            }
+        } <span class="keyword">catch</span> (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+}
+</code></pre><h1 id="3-实现消费者，用于删除buffer中的元素"><h3>3.实现消费者，用于删除buffer中的元素</h3></h1>
+<pre><code><span class="keyword">package</span> com.hang.thread.condition2;
+
+<span class="javadoc">/**
+ * User: hang
+ * Date: 14-12-31
+ * Time: 上午10:06
+ */</span>
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Consumer</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>{
+
+    <span class="keyword">private</span> Buffer buffer;
+
+    <span class="keyword">public</span> <span class="title">Consumer</span>(Buffer buffer) {
+        <span class="keyword">this</span>.buffer = buffer;
+    }
+
+    <span class="annotation">@Override</span>
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span>() {
+        <span class="keyword">try</span> {
+            <span class="keyword">while</span> (<span class="keyword">true</span>) {<span class="comment">//每0.5秒消费一个产品</span>
+                buffer.comsume();
+                Thread.currentThread().sleep(<span class="number">1000</span>);
+            }
+        } <span class="keyword">catch</span> (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}
+</code></pre><h1 id="4-创建一个生产者线程和若干个消费者线程，并启动"><h3>4.创建一个生产者线程和若干个消费者线程，并启动</h3></h1>
+<pre><code><span class="keyword">package</span> com.hang.thread.condition2;
+
+<span class="keyword">import</span> java.util.ArrayList;
+<span class="keyword">import</span> java.util.List;
+
+<span class="javadoc">/**
+ * User: hang
+ * Date: 14-12-31
+ * Time: 上午10:23
+ */</span>
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>{
+
+    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span>(String args[]) {
+        List container = <span class="keyword">new</span> ArrayList();
+        Buffer buffer = <span class="keyword">new</span> Buffer(<span class="number">10</span>,container);
+        <span class="keyword">new</span> Thread(<span class="keyword">new</span> Producer(buffer)).start();<span class="comment">//初始化一个生产者</span>
+
+        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span> ;i &lt; <span class="number">3</span> ; i++){<span class="comment">//建立三个消费者</span>
+            <span class="keyword">new</span> Thread(<span class="keyword">new</span> Consumer(buffer)).start();
+        }
+    }
+
+}
+</code></pre>]]></content>
+         
+         
+           
+             
+              <breadCrumb title="多线程" url="www.lkh.im/categories/%E5%A4%9A%E7%BA%BF%E7%A8%8B/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>www.lkh.im/2014/12/30/Shell%E7%BC%96%E7%A8%8B%E6%9E%81%E7%AE%80%E5%85%A5%E9%97%A8%E5%AE%9E%E8%B7%B5/</loc>
     <lastmod>2014-12-30T09:31:43.000Z</lastmod>
     <data>
