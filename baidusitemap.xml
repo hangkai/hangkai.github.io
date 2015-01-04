@@ -4,7 +4,7 @@
     
   <url>
     <loc>www.lkh.im/2015/01/04/java%E7%BA%BF%E7%A8%8B%E6%B1%A04%E7%A7%8D%E5%AE%9E%E4%BE%8B%E5%8C%96%E6%96%B9%E5%BC%8F%E4%BB%8B%E7%BB%8D/</loc>
-    <lastmod>2015-01-04T06:28:11.000Z</lastmod>
+    <lastmod>2015-01-04T06:34:37.000Z</lastmod>
     <data>
         <display>
         <title>java线程池4种实例化方式介绍</title>
@@ -16,7 +16,9 @@
          
         <tag>线程池 </tag>
          
-         <content><![CDATA[<pre><code><span class="keyword">package</span> com.hang.thread.pool;
+         <content><![CDATA[<h4>1.建立一个简单的线程实现类</h4>
+
+<pre><code><span class="keyword">package</span> com.hang.thread.pool;
 
 <span class="javadoc">/**
  * User: hang
@@ -32,9 +34,9 @@
     }
 
 }
+</code></pre><h4>2.测试CachedThreadPool</h4>
 
-
-<span class="keyword">package</span> com.hang.thread.pool;
+<pre><code><span class="keyword">package</span> com.hang.thread.pool;
 
 <span class="keyword">import</span> java.util.concurrent.ExecutorService;
 <span class="keyword">import</span> java.util.concurrent.Executors;
@@ -73,8 +75,9 @@
     }
 
 }
+</code></pre><h4>3.测试FixedThreadPool</h4>
 
-<span class="keyword">package</span> com.hang.thread.pool;
+<pre><code><span class="keyword">package</span> com.hang.thread.pool;
 
 <span class="keyword">import</span> java.util.concurrent.ExecutorService;
 <span class="keyword">import</span> java.util.concurrent.Executors;
@@ -111,10 +114,9 @@
     }
 
 }
+</code></pre><h4>4.测试ScheduledThreadPoolExecutor</h4>
 
-
-
-<span class="keyword">package</span> com.hang.thread.pool;
+<pre><code><span class="keyword">package</span> com.hang.thread.pool;
 
 <span class="keyword">import</span> java.util.concurrent.ScheduledThreadPoolExecutor;
 <span class="keyword">import</span> java.util.concurrent.TimeUnit;
@@ -156,20 +158,18 @@
     }
 
 }
+</code></pre><h4>5.测试SingleThreadExecutor</h4>
 
 
-
-<span class="keyword">package</span> com.hang.thread.pool;
+<pre><code><span class="keyword">package</span> com.hang.thread.pool;
 
 <span class="keyword">import</span> java.util.concurrent.ExecutorService;
 <span class="keyword">import</span> java.util.concurrent.Executors;
 
 <span class="javadoc">/**
- * Created with IntelliJ IDEA.
  * User: hang
  * Date: 15-1-4
  * Time: 上午9:58
- * To change this template use File | Settings | File Templates.
  */</span>
 <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestSingleThreadExecutor</span> </span>{
 
