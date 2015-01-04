@@ -3,6 +3,219 @@
 
     
   <url>
+    <loc>www.lkh.im/2015/01/04/java%E7%BA%BF%E7%A8%8B%E6%B1%A04%E7%A7%8D%E5%AE%9E%E4%BE%8B%E5%8C%96%E6%96%B9%E5%BC%8F%E4%BB%8B%E7%BB%8D/</loc>
+    <lastmod>2015-01-04T06:28:11.000Z</lastmod>
+    <data>
+        <display>
+        <title>java线程池4种实例化方式介绍</title>
+        <pubTime>2015-01-04T06:24:17.000Z</pubTime>
+        
+        <tag>多线程 </tag>
+         
+        <tag>java </tag>
+         
+        <tag>线程池 </tag>
+         
+         <content><![CDATA[<pre><code><span class="keyword">package</span> com.hang.thread.pool;
+
+<span class="javadoc">/**
+ * User: hang
+ * Date: 15-1-4
+ * Time: 上午9:57
+ * 一个简单的线程实现类
+ */</span>
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyThread</span> <span class="keyword">extends</span> <span class="title">Thread</span></span>{
+
+    <span class="annotation">@Override</span>
+    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span>() {
+        System.out.println(Thread.currentThread().getName() + <span class="string">"正在执行。。。"</span>);
+    }
+
+}
+
+
+<span class="keyword">package</span> com.hang.thread.pool;
+
+<span class="keyword">import</span> java.util.concurrent.ExecutorService;
+<span class="keyword">import</span> java.util.concurrent.Executors;
+
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestCachedThreadPool</span> </span>{
+
+    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span>(String[] args) {
+
+        <span class="javadoc">/**
+         * newCachedThreadPool
+         * 创建一个可根据需要创建新线程的线程池，但是在以前构造的线程可用时将重用它们。
+         * 对于执行很多短期异步任务的程序而言，这些线程池通常可提高程序性能。调用 execute 将重用以前构造的线程（如果线程可用）。
+         * 如果现有线程没有可用的，则创建一个新线程并添加到池中。终止并从缓存中移除那些已有 60 秒钟未被使用的线程。
+         * 因此，长时间保持空闲的线程池不会使用任何资源。
+         * 注意，可以使用 ThreadPoolExecutor 构造方法创建具有类似属性但细节不同（例如超时参数）的线程池。
+         */</span>
+        ExecutorService pool = Executors.newCachedThreadPool();
+
+        <span class="comment">//创建实现了Runnable接口对象，Thread对象当然也实现了Runnable接口</span>
+        Thread t1 = <span class="keyword">new</span> MyThread();
+        Thread t2 = <span class="keyword">new</span> MyThread();
+        Thread t3 = <span class="keyword">new</span> MyThread();
+        Thread t4 = <span class="keyword">new</span> MyThread();
+        Thread t5 = <span class="keyword">new</span> MyThread();
+
+        <span class="comment">//将线程放入池中进行执行</span>
+        pool.execute(t1);
+        pool.execute(t2);
+        pool.execute(t3);
+        pool.execute(t4);
+        pool.execute(t5);
+
+        <span class="comment">//关闭线程池</span>
+        pool.shutdown();
+
+    }
+
+}
+
+<span class="keyword">package</span> com.hang.thread.pool;
+
+<span class="keyword">import</span> java.util.concurrent.ExecutorService;
+<span class="keyword">import</span> java.util.concurrent.Executors;
+
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestFixedThreadPool</span> </span>{
+
+    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span>(String[] args) {
+
+        <span class="javadoc">/**
+         * newFixedThreadPool
+         * 创建固定大小的线程池。每次提交一个任务就创建一个线程，
+         * 直到线程达到线程池的最大大小。线程池的大小一旦达到最大值就会保持不变，
+         * 如果某个线程因为执行异常而结束，那么线程池会补充一个新线程。
+         */</span>
+        ExecutorService pool = Executors.newFixedThreadPool(<span class="number">2</span>);
+
+        <span class="comment">//创建实现了Runnable接口对象，Thread对象当然也实现了Runnable接口</span>
+        Thread t1 = <span class="keyword">new</span> MyThread();
+        Thread t2 = <span class="keyword">new</span> MyThread();
+        Thread t3 = <span class="keyword">new</span> MyThread();
+        Thread t4 = <span class="keyword">new</span> MyThread();
+        Thread t5 = <span class="keyword">new</span> MyThread();
+
+        <span class="comment">//将线程放入池中进行执行</span>
+        pool.execute(t1);
+        pool.execute(t2);
+        pool.execute(t3);
+        pool.execute(t4);
+        pool.execute(t5);
+
+        <span class="comment">//关闭线程池</span>
+        pool.shutdown();
+
+    }
+
+}
+
+
+
+<span class="keyword">package</span> com.hang.thread.pool;
+
+<span class="keyword">import</span> java.util.concurrent.ScheduledThreadPoolExecutor;
+<span class="keyword">import</span> java.util.concurrent.TimeUnit;
+
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestScheduledThreadPoolExecutor</span> </span>{
+
+    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span>(String[] args) {
+
+        <span class="javadoc">/**
+         * newScheduledThreadPool
+         * 创建一个大小无限的线程池。此线程池支持定时以及周期性执行任务的需求。
+         */</span>
+        ScheduledThreadPoolExecutor exec = <span class="keyword">new</span> ScheduledThreadPoolExecutor(<span class="number">1</span>);
+
+        exec.scheduleAtFixedRate(<span class="keyword">new</span> Runnable() {<span class="comment">//每隔一段时间就触发异常</span>
+
+            <span class="annotation">@Override</span>
+            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span>() {
+
+                <span class="comment">//throw new RuntimeException();</span>
+
+                System.out.println(<span class="string">"================"</span>);
+
+            }
+
+        }, <span class="number">1000</span>, <span class="number">5000</span>, TimeUnit.MILLISECONDS);
+
+        exec.scheduleAtFixedRate(<span class="keyword">new</span> Runnable() {<span class="comment">//每隔一段时间打印系统时间，证明两者是互不影响的</span>
+
+            <span class="annotation">@Override</span>
+            <span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span>() {
+
+                System.out.println(System.nanoTime());
+
+            }
+
+        }, <span class="number">1000</span>, <span class="number">2000</span>, TimeUnit.MILLISECONDS);
+
+    }
+
+}
+
+
+
+<span class="keyword">package</span> com.hang.thread.pool;
+
+<span class="keyword">import</span> java.util.concurrent.ExecutorService;
+<span class="keyword">import</span> java.util.concurrent.Executors;
+
+<span class="javadoc">/**
+ * Created with IntelliJ IDEA.
+ * User: hang
+ * Date: 15-1-4
+ * Time: 上午9:58
+ * To change this template use File | Settings | File Templates.
+ */</span>
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestSingleThreadExecutor</span> </span>{
+
+    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span>(String[] args) {
+
+        <span class="javadoc">/**
+         * newSingleThreadExecutor
+         * 创建一个单线程的线程池。这个线程池只有一个线程在工作，也就是相当于单线程串行执行所有任务。
+         * 如果这个唯一的线程因为异常结束，那么会有一个新的线程来替代它。
+         * 此线程池保证所有任务的执行顺序按照任务的提交顺序执行。
+         */</span>
+        ExecutorService pool = Executors.newSingleThreadExecutor();
+
+        <span class="comment">//创建实现了Runnable接口对象，Thread对象当然也实现了Runnable接口</span>
+        Thread t1 = <span class="keyword">new</span> MyThread();
+        Thread t2 = <span class="keyword">new</span> MyThread();
+        Thread t3 = <span class="keyword">new</span> MyThread();
+        Thread t4 = <span class="keyword">new</span> MyThread();
+        Thread t5 = <span class="keyword">new</span> MyThread();
+
+        <span class="comment">//将线程放入池中进行执行</span>
+        pool.execute(t1);
+        pool.execute(t2);
+        pool.execute(t3);
+        pool.execute(t4);
+        pool.execute(t5);
+
+        <span class="comment">//关闭线程池</span>
+        pool.shutdown();
+
+    }
+
+}
+</code></pre>]]></content>
+         
+         
+           
+             
+              <breadCrumb title="多线程" url="www.lkh.im/categories/%E5%A4%9A%E7%BA%BF%E7%A8%8B/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>www.lkh.im/2014/12/31/Lock%E4%B8%AD%E4%BD%BF%E7%94%A8%E5%A4%9A%E4%B8%AA%E6%9D%A1%E4%BB%B6condition/</loc>
     <lastmod>2014-12-31T07:56:34.000Z</lastmod>
     <data>
