@@ -85,7 +85,7 @@
     </p>
   <p class="article-time">
     <time datetime="2014-12-31T07:53:45.000Z" itemprop="datePublished">12月 31 2014</time>
-    更新日期:<time datetime="2014-12-31T07:56:34.000Z" itemprop="dateModified">12月 31 2014</time>
+    更新日期:<time datetime="2015-01-05T03:15:01.000Z" itemprop="dateModified">1月 5 2015</time>
     
   </p>
 </header>
@@ -104,69 +104,77 @@
 <blockquote>
 <p>Buffer有6个属性：<br>1.container用于存储数据，是一个list<br>2.startProduct用与控制是否生产数据的condition<br>3.startConsume用于控制是否消费数据的condition<br>4.lock，一个ReentrantLock对象，用来控制修改缓冲区代码块的访问<br>5.consumeCount消费的产品总数<br>6.maxSize最大产品数</p>
 </blockquote>
-<pre><code>package com.hang.thread.condition2;
+<pre><code><span class="keyword">package</span> com.hang.thread.condition2;
 
-import java.util.List;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.ReentrantLock;
+<span class="keyword">import</span> java.util.List;
+<span class="keyword">import</span> java.util.concurrent.locks.Condition;
+<span class="keyword">import</span> java.util.concurrent.locks.ReentrantLock;
 
 
-<span class="comment">/**
+<span class="javadoc">/**
  * User: hang
  * Date: 14-12-31
  * Time: 上午10:06
  */</span>
-<span class="keyword">public</span> <span class="keyword">class</span> Buffer {
+<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Buffer</span> </span>{
 
     <span class="keyword">private</span> List container = <span class="keyword">null</span>;
     <span class="keyword">private</span> Condition startProduct;<span class="comment">//开始生产的条件</span>
     <span class="keyword">private</span> Condition startConsume;<span class="comment">//开始消费的条件</span>
-    <span class="keyword">private</span> ReentrantLock <span class="keyword">lock</span> = <span class="keyword">null</span>;
+    <span class="keyword">private</span> ReentrantLock lock = <span class="keyword">null</span>;
     <span class="keyword">private</span> <span class="keyword">int</span> consumeCount;<span class="comment">//消费的产品总数</span>
     <span class="keyword">private</span> <span class="keyword">int</span> maxSize;<span class="comment">//最大产品数</span>
 
     <span class="keyword">public</span> <span class="title">Buffer</span>(<span class="keyword">int</span> maxSize, List container) {
         <span class="keyword">this</span>.maxSize = maxSize;
-        <span class="keyword">lock</span> = <span class="keyword">new</span> ReentrantLock();
-        startProduct = <span class="keyword">lock</span>.newCondition();
-        startConsume = <span class="keyword">lock</span>.newCondition();
+        lock = <span class="keyword">new</span> ReentrantLock();
+        startProduct = lock.newCondition();
+        startConsume = lock.newCondition();
         <span class="keyword">this</span>.container = container;
     }
 
     <span class="keyword">public</span> <span class="keyword">void</span> <span class="title">product</span>() {<span class="comment">//生产的方法</span>
-        <span class="keyword">lock</span>.<span class="keyword">lock</span>();
+        lock.lock();
         <span class="keyword">try</span> {
+           <span class="javadoc">/**
+             *  为什么用while不用if
+             *  因为当满的时候，假设线程1执行product到startProduct.await()后进入对象等待池，并且释放对象锁，
+             *  此时如果又有个线程2得到锁进入product方法startProduct.await()方法，进入对象的等待池并且释放锁；线程3得到锁后执行
+             *  consume，使得满不成立，并且执行startProduct.signalAll()，将线程1，2从等待池中放入锁池等锁，有可能线程1得到锁后继续执行 product
+             *  这样生产了一个元素，而当线程1执行完后，恰恰又是线程2得到锁，他得到锁后也继续执行product，也生产了一个元素，
+             *  这样就超出了容量，如果是while的话，再让他判断一次的话，线程2不满足条件，继续进入对待池 这就是用while而不使用if的原因
+             */</span>
             <span class="keyword">while</span> (container.size() == maxSize) {<span class="comment">//如果生产的数量达到最大值，先暂停生产</span>
-                System.<span class="keyword">out</span>.println(<span class="string">"产品堆积太多，先暂停生产....."</span>);
-                startProduct.<span class="keyword">await</span>();<span class="comment">//暂停生产</span>
+                System.out.println(<span class="string">"产品堆积太多，先暂停生产....."</span>);
+                startProduct.await();<span class="comment">//暂停生产</span>
             }
             <span class="keyword">this</span>.container.add(<span class="keyword">new</span> Object());
-            System.<span class="keyword">out</span>.printf(<span class="string">"%s: 剩余的产品总数: %d\n"</span>, Thread.
+            System.out.printf(<span class="string">"%s: 剩余的产品总数: %d\n"</span>, Thread.
                     currentThread().getName(), <span class="keyword">this</span>.container.size());
             startConsume.signalAll();<span class="comment">//继续消费</span>
         } <span class="keyword">catch</span> (InterruptedException e) {
             e.printStackTrace();
         } <span class="keyword">finally</span> {
-            <span class="keyword">lock</span>.unlock();
+            lock.unlock();
         }
     }
 
     <span class="keyword">public</span> Object <span class="title">comsume</span>() {<span class="comment">//消费的方法</span>
-        <span class="keyword">lock</span>.<span class="keyword">lock</span>();
+        lock.lock();
         Object o = <span class="keyword">null</span>;
         <span class="keyword">try</span> {
             <span class="keyword">while</span> (container.size() &lt;= <span class="number">0</span>) {<span class="comment">//如果产品数=0，那么暂停消费</span>
-                System.<span class="keyword">out</span>.println(<span class="string">"缺货了，先暂停消费....."</span>);
-                startConsume.<span class="keyword">await</span>();
+                System.out.println(<span class="string">"缺货了，先暂停消费....."</span>);
+                startConsume.await();
             }
             o = <span class="keyword">this</span>.container.remove(<span class="number">0</span>);
-            System.<span class="keyword">out</span>.printf(<span class="string">"%s: 消费产品总数: %d\n"</span>,Thread.
+            System.out.printf(<span class="string">"%s: 消费产品总数: %d\n"</span>,Thread.
                     currentThread().getName(),++consumeCount);
             startProduct.signalAll();
         } <span class="keyword">catch</span> (InterruptedException e) {
             e.printStackTrace();
         } <span class="keyword">finally</span> {
-            <span class="keyword">lock</span>.unlock();
+            lock.unlock();
         }
         <span class="keyword">return</span> o;
     }
