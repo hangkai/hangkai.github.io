@@ -85,7 +85,7 @@
     </p>
   <p class="article-time">
     <time datetime="2014-12-31T07:53:45.000Z" itemprop="datePublished">12月 31 2014</time>
-    更新日期:<time datetime="2015-01-05T03:16:25.000Z" itemprop="dateModified">1月 5 2015</time>
+    更新日期:<time datetime="2015-01-05T06:43:24.000Z" itemprop="dateModified">1月 5 2015</time>
     
   </p>
 </header>
@@ -101,9 +101,7 @@
 
 <p>一个锁可能伴随着多个条件。这些条件声明在Condition接口中。 这些条件的目的是允许线程拥有锁的控制并且检查条件是否为true，如果是false，那么线程将被阻塞，直到其他线程唤醒它们。Condition接口提供一种机制，阻塞一个线程和唤醒一个被阻塞的线程。</p>
 <h1 id="1-实现Buffer类，用来实现在生产者与消费者之间共享的缓冲区。"><h3>1.实现Buffer类，用来实现在生产者与消费者之间共享的缓冲区。</h3></h1>
-<blockquote>
 <p>Buffer有6个属性：<br>1.container用于存储数据，是一个list<br>2.startProduct用与控制是否生产数据的condition<br>3.startConsume用于控制是否消费数据的condition<br>4.lock，一个ReentrantLock对象，用来控制修改缓冲区代码块的访问<br>5.consumeCount消费的产品总数<br>6.maxSize最大产品数</p>
-</blockquote>
 <pre><code><span class="keyword">package</span> com.hang.thread.condition2;
 
 <span class="keyword">import</span> java.util.List;
