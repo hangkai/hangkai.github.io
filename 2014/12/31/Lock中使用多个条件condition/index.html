@@ -85,7 +85,7 @@
     </p>
   <p class="article-time">
     <time datetime="2014-12-31T07:53:45.000Z" itemprop="datePublished">12月 31 2014</time>
-    更新日期:<time datetime="2015-01-05T03:15:01.000Z" itemprop="dateModified">1月 5 2015</time>
+    更新日期:<time datetime="2015-01-05T03:16:25.000Z" itemprop="dateModified">1月 5 2015</time>
     
   </p>
 </header>
@@ -159,7 +159,7 @@
         }
     }
 
-    <span class="keyword">public</span> Object <span class="title">comsume</span>() {<span class="comment">//消费的方法</span>
+    <span class="keyword">public</span> Object <span class="title">consume</span>() {<span class="comment">//消费的方法</span>
         lock.lock();
         Object o = <span class="keyword">null</span>;
         <span class="keyword">try</span> {
@@ -234,7 +234,7 @@
     <span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span>() {
         <span class="keyword">try</span> {
             <span class="keyword">while</span> (<span class="keyword">true</span>) {<span class="comment">//每0.5秒消费一个产品</span>
-                buffer.comsume();
+                buffer.consume();
                 Thread.currentThread().sleep(<span class="number">1000</span>);
             }
         } <span class="keyword">catch</span> (InterruptedException e) {
