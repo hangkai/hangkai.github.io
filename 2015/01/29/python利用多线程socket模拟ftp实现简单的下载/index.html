@@ -89,7 +89,7 @@ python多线程socket服务器，模拟ftp服务
     </p>
   <p class="article-time">
     <time datetime="2015-01-29T12:01:35.000Z" itemprop="datePublished">1月 29 2015</time>
-    更新日期:<time datetime="2015-01-29T12:04:18.000Z" itemprop="dateModified">1月 29 2015</time>
+    更新日期:<time datetime="2015-01-29T12:05:50.000Z" itemprop="dateModified">1月 29 2015</time>
     
   </p>
 </header>
@@ -121,14 +121,14 @@ python多线程socket服务器，模拟ftp服务
             user_input = self.data.split()<span class="comment">#与客户端约定以'get xxx'的形式上传请求</span>
 
             <span class="keyword">if</span> user_input[<span class="number">0</span>] == <span class="string">'get'</span>:<span class="comment">#如果是get开头的命令，那么就是获取文件的请求</span>
-\<span class="comment">#第二个字符串为要下载的文件，读取文件，以字节形式读取文件，并全部返回给客户端</span>
+<span class="comment">#第二个字符串为要下载的文件，读取文件，以字节形式读取文件，并全部返回给客户端</span>
                 <span class="keyword">with</span> open(user_input[<span class="number">1</span>],<span class="string">'rb'</span>) <span class="keyword">as</span> f :
                     self.request.sendall(f.read())
                 time.sleep(<span class="number">0.5</span>)
                 <span class="comment">#有时读取速度太快，会把文件的内容和下面的结束标志作为一个请求一次性传给来客户端，所以这里暂时休眠0.5秒，让下面的FileTransferDone迟点发送</span>
                 self.request.send(<span class="string">'FileTransferDone'</span>)
                 <span class="keyword">continue</span>
-\<span class="comment">#commands.getstatusoutput返回的元组中[0]代表命令执行的状态值,[1]代表执行命令后的结果</span>
+<span class="comment">#commands.getstatusoutput返回的元组中[0]代表命令执行的状态值,[1]代表执行命令后的结果</span>
             cmd_status,result = commands.getstatusoutput(self.data)
             <span class="keyword">if</span> len(result) != <span class="number">0</span> :
                 self.request.sendall(result)
@@ -136,10 +136,10 @@ python多线程socket服务器，模拟ftp服务
                 self.request.sendall(<span class="string">"DONE"</span>)
 
 <span class="keyword">if</span> __name__==<span class="string">'__main__'</span>:
-\<span class="comment">#指定ip,端口</span>
+<span class="comment">#指定ip,端口</span>
     HOST,PORT=<span class="string">"127.0.0.1"</span>,<span class="number">9999</span>
-\<span class="comment">#把继承了BaseRequestHandler类的MyTCPHandler做为参数，创建ThreadingTCPServer对象</span>
-\<span class="comment">#MyTCPHandler类中重写来handle方法，该方法用于接收到request后的操作</span>
+<span class="comment">#把继承了BaseRequestHandler类的MyTCPHandler做为参数，创建ThreadingTCPServer对象</span>
+<span class="comment">#MyTCPHandler类中重写来handle方法，该方法用于接收到request后的操作</span>
     server = SocketServer.ThreadingTCPServer((HOST,PORT),MyTCPHandler)
     server.serve_forever()<span class="comment">#启动服务</span>
 </code></pre><h1 id="client:">client:</h1>
