@@ -7,14 +7,18 @@
   <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8" />
 <meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88" />
   
-    <title>LVS 三种工作模式原理、以及优缺点比较 | Hang&#39;s blog</title>
+    <title>python利用多线程socket模拟ftp实现简单的下载 | Hang&#39;s blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="hang">
     
-    <meta name="description" content="一、NAT模式（VS-NAT）
-原理：
-就是把客户端发来的数据包的IP头的目的地址，在负载均衡器上换成其中一台RS 的IP地址，并发至此RS来处理,RS处理完成后把数据交给经过负载均衡器,负载均衡器再把数据包的原IP地址改为自己的IP，将目的地址改为客户端IP 地址即可｡期间,无论是进来的流量,还是">
+    <meta name="description" content="Server:
+__author__ = &#39;hang&#39;
+import SocketServer,commands
+import time
+&#39;&#39;&#39;
+python多线程socket服务器，模拟ftp服务
+通过继承BaseRequestHandler，并重写handle方法，做handle方法中编写接收到">
     
     
     
@@ -77,15 +81,15 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2014/12/27/LVS-三种工作模式原理、以及优缺点比较/" title="LVS 三种工作模式原理、以及优缺点比较" itemprop="url">LVS 三种工作模式原理、以及优缺点比较</a>
+      <a href="/2015/01/29/python利用多线程socket模拟ftp实现简单的下载/" title="python利用多线程socket模拟ftp实现简单的下载" itemprop="url">python利用多线程socket模拟ftp实现简单的下载</a>
   </h1>
   <p class="article-author">By
     
       <a href="www.lkh.im" title="hang">hang</a>
     </p>
   <p class="article-time">
-    <time datetime="2014-12-27T06:05:34.000Z" itemprop="datePublished">12月 27 2014</time>
-    更新日期:<time datetime="2014-12-27T06:10:07.000Z" itemprop="dateModified">12月 27 2014</time>
+    <time datetime="2015-01-29T12:01:35.000Z" itemprop="datePublished">1月 29 2015</time>
+    更新日期:<time datetime="2015-01-29T12:04:18.000Z" itemprop="dateModified">1月 29 2015</time>
     
   </p>
 </header>
@@ -94,44 +98,102 @@
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#一、NAT模式（VS-NAT）"><span class="toc-number">1.</span> <span class="toc-text">一、NAT模式（VS-NAT）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#二、IP隧道模式（VS-TUN）"><span class="toc-number">2.</span> <span class="toc-text">二、IP隧道模式（VS-TUN）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#三、直接路由模式（VS-DR）"><span class="toc-number">3.</span> <span class="toc-text">三、直接路由模式（VS-DR）</span></a></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Server:"><span class="toc-number">1.</span> <span class="toc-text">Server:</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#client:"><span class="toc-number">2.</span> <span class="toc-text">client:</span></a></li></ol>
 		</div>
 		
-		<h1 id="一、NAT模式（VS-NAT）">一、NAT模式（VS-NAT）</h1>
-<p>原理：</p>
-<p>就是把客户端发来的数据包的IP头的目的地址，在负载均衡器上换成其中一台RS 的IP地址，并发至此RS来处理,RS处理完成后把数据交给经过负载均衡器,负载均衡器再把数据包的原IP地址改为自己的IP，将目的地址改为客户端IP 地址即可｡期间,无论是进来的流量,还是出去的流量,都必须经过负载均衡器｡</p>
-<p>优点：集群中的物理服务器可以使用任何支持TCP/IP操作系统，只有负载均衡器需要一个合法的IP地址。</p>
-<p>缺点：扩展性有限。当服务器节点（普通PC服务器）增长过多时,负载均衡器将成为整个系统的瓶颈，因为所有的请求包和应答包的流向都经过负载均衡器。当服务器节点过多时，大量的数据包都交汇在负载均衡器那，速度就会变慢！</p>
-<h1 id="二、IP隧道模式（VS-TUN）">二、IP隧道模式（VS-TUN）</h1>
-<p>原理：</p>
-<p>首先要知道，互联网上的大多Internet服务的请求包很短小，而应答包通常很大。那么隧道模式就是，把客户端发来的数据包，封装一个新的IP头标记(仅目的IP)发给RS,RS收到后,先把数据包的头解开,还原数据包,处理后,直接返回给客户端,不需要再经过负载均衡器｡注意,由于RS需要对负载均衡器 发过来的数据包进行还原,所以说必须支持IPTUNNEL协议｡所以,在RS的内核中,必须编译支持IPTUNNEL这个选项</p>
-<p>优点：负载均衡器只负责将请求包分发给后端节点服务器，而RS将应答包直接发给用户。所以，减少了负载均衡器的大量数据流动，负载均衡器不再是系统的瓶颈，就能处理很巨大的请求量，这种方式，一台负载均衡器能够为很多RS进行分发。而且跑在公网上就能进行不同地域的分发。</p>
-<p>缺点：隧道模式的RS节点需要合法IP，这种方式需要所有的服务器支持”IP Tunneling”(IP Encapsulation)协议，服务器可能只局限在部分Linux系统上。</p>
-<h1 id="三、直接路由模式（VS-DR）">三、直接路由模式（VS-DR）</h1>
-<p>原理：</p>
-<p>负载均衡器和RS都使用同一个IP对外服务｡但只有DR对ARP请求进行响应,所有RS对本身这个IP的ARP请求保持静默｡也就是说,网关会把对这个服务 IP的请求全部定向给DR,而DR收到数据包后根据调度算法,找出对应的RS,把目的MAC地址改为RS的MAC（因为IP一致）并将请求分发给这台 RS｡这时RS收到这个数据包,处理完成之后，由于IP一致，可以直接将数据返给客户，则等于直接从客户端收到这个数据包无异,处理后直接返回给客户端｡ 由于负载均衡器要对二层包头进行改换,所以负载均衡器和RS之间必须在一个广播域,也可以简单的理解为在同一台交换机上｡</p>
-<p>优点：和TUN（隧道模式）一样，负载均衡器也只是分发请求，应答包通过单独的路由方法返回给客户端。与VS-TUN相比，VS-DR这种实现方式不需要隧道结构，因此可以使用大多数操作系统做为物理服务器。</p>
-<p>缺点：（不能说缺点，只能说是不足）要求负载均衡器的网卡必须与物理网卡在一个物理段上。</p>
-  
+		<h1 id="Server:">Server:</h1>
+<pre><code>__author__ = <span class="string">'hang'</span>
+<span class="keyword">import</span> SocketServer,commands
+<span class="keyword">import</span> time
+<span class="string">'''
+python多线程socket服务器，模拟ftp服务
+通过继承BaseRequestHandler，并重写handle方法，做handle方法中编写接收到request后的操作
+'''</span>
+
+<span class="class"><span class="keyword">class</span> <span class="title">MyTCPHandler</span><span class="params">(SocketServer.BaseRequestHandler)</span>:</span>
+    <span class="function"><span class="keyword">def</span> <span class="title">handle</span><span class="params">(self)</span>:</span>
+        <span class="keyword">while</span> <span class="number">1</span>:
+            self.data = self.request.recv(<span class="number">1024</span>).strip()<span class="comment">#获取request，并接收客户端的socket的请求</span>
+            <span class="keyword">print</span> <span class="string">"{} wrote:"</span>.format(self.client_address[<span class="number">0</span>])
+            <span class="keyword">if</span> <span class="keyword">not</span> self.data:
+                <span class="keyword">print</span> <span class="string">"client %s is dead!"</span> % self.client_address[<span class="number">0</span>]
+                <span class="keyword">break</span>
+            user_input = self.data.split()<span class="comment">#与客户端约定以'get xxx'的形式上传请求</span>
+
+            <span class="keyword">if</span> user_input[<span class="number">0</span>] == <span class="string">'get'</span>:<span class="comment">#如果是get开头的命令，那么就是获取文件的请求</span>
+\<span class="comment">#第二个字符串为要下载的文件，读取文件，以字节形式读取文件，并全部返回给客户端</span>
+                <span class="keyword">with</span> open(user_input[<span class="number">1</span>],<span class="string">'rb'</span>) <span class="keyword">as</span> f :
+                    self.request.sendall(f.read())
+                time.sleep(<span class="number">0.5</span>)
+                <span class="comment">#有时读取速度太快，会把文件的内容和下面的结束标志作为一个请求一次性传给来客户端，所以这里暂时休眠0.5秒，让下面的FileTransferDone迟点发送</span>
+                self.request.send(<span class="string">'FileTransferDone'</span>)
+                <span class="keyword">continue</span>
+\<span class="comment">#commands.getstatusoutput返回的元组中[0]代表命令执行的状态值,[1]代表执行命令后的结果</span>
+            cmd_status,result = commands.getstatusoutput(self.data)
+            <span class="keyword">if</span> len(result) != <span class="number">0</span> :
+                self.request.sendall(result)
+            <span class="keyword">else</span>:
+                self.request.sendall(<span class="string">"DONE"</span>)
+
+<span class="keyword">if</span> __name__==<span class="string">'__main__'</span>:
+\<span class="comment">#指定ip,端口</span>
+    HOST,PORT=<span class="string">"127.0.0.1"</span>,<span class="number">9999</span>
+\<span class="comment">#把继承了BaseRequestHandler类的MyTCPHandler做为参数，创建ThreadingTCPServer对象</span>
+\<span class="comment">#MyTCPHandler类中重写来handle方法，该方法用于接收到request后的操作</span>
+    server = SocketServer.ThreadingTCPServer((HOST,PORT),MyTCPHandler)
+    server.serve_forever()<span class="comment">#启动服务</span>
+</code></pre><h1 id="client:">client:</h1>
+<pre><code>__author_<span class="number">_</span> = <span class="string">'hang'</span>
+import <span class="keyword">socket</span>, <span class="keyword">time</span>
+<span class="string">''</span><span class="string">'
+建立一个简单客户连接则需要4个步骤。
+
+第1步，创建一个socket以连接服务器 socket=socket.socket(family,type)
+
+第2步，使用socket的connect方法连接服务器 socket.connect((host,port))
+
+第3步，客户和服务器通过send和recv方法通信。
+
+第4步，结束后，客户通过调用socket的close方法来关闭连接。
+'</span><span class="string">''</span>
+HOST = <span class="string">'127.0.0.1'</span>
+PORT = <span class="number">9999</span>
+<span class="keyword">s</span> = <span class="keyword">socket</span>.<span class="keyword">socket</span>(<span class="keyword">socket</span>.AF_INET,<span class="keyword">socket</span>.SOCK_STREAM)<span class="comment">#客户端socket实例</span>
+<span class="keyword">s</span>.<span class="keyword">connect</span>((HOST,PORT))<span class="comment">#连接服务器</span>
+<span class="keyword">while</span> <span class="number">1</span>:
+    cmd = raw_input(<span class="string">'Your command:'</span>).strip()
+    <span class="keyword">if</span> len(cmd) == <span class="number">0</span>: <span class="keyword">continue</span>
+    <span class="keyword">s</span>.sendall(cmd)
+    <span class="keyword">if</span> cmd.<span class="keyword">split</span>()[<span class="number">0</span>] == <span class="string">'get'</span>:
+        with <span class="keyword">open</span>(cmd.<span class="keyword">split</span>()[<span class="number">1</span>],<span class="string">'wb'</span>) as f:
+            <span class="keyword">while</span> <span class="number">1</span>:
+                data = <span class="keyword">s</span>.<span class="keyword">recv</span>(<span class="number">1024</span>)
+                <span class="keyword">if</span> data == <span class="string">'FileTransferDone'</span>:<span class="keyword">break</span>
+                f.<span class="keyword">write</span>(data)
+        <span class="keyword">continue</span>
+    <span class="keyword">else</span>:
+        <span class="keyword">print</span> <span class="keyword">s</span>.<span class="keyword">recv</span>(<span class="number">1024</span>)
+<span class="keyword">s</span>.<span class="keyword">close</span>()
+</code></pre>  
 	</div>
 		<footer class="article-footer clearfix">
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/linux/">linux</a><a href="/tags/lvs/">lvs</a>
+  <span></span> <a href="/tags/python/">python</a><a href="/tags/socket/">socket</a>
   </div>
 
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/运维/">运维</a>
+  <a class="article-category-link" href="/categories/python/">python</a>
 </div>
 
 
 
 <div class="article-share" id="share">
 
-  <div data-url="www.lkh.im/2014/12/27/LVS-三种工作模式原理、以及优缺点比较/" data-title="LVS 三种工作模式原理、以及优缺点比较 | Hang&#39;s blog" data-tsina="null" class="share clearfix">
+  <div data-url="www.lkh.im/2015/01/29/python利用多线程socket模拟ftp实现简单的下载/" data-title="python利用多线程socket模拟ftp实现简单的下载 | Hang&#39;s blog" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -140,19 +202,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2014/12/27/vi基本操作/" title="vi基本操作">
-  <strong>PREVIOUS:</strong><br/>
-  <span>
-  vi基本操作</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2014/12/20/centos6下安装redis/"  title="centos6下安装redis">
+<a href="/2015/01/05/CentOS系统中常用查看日志命令/"  title="CentOS系统中常用查看日志命令">
  <strong>NEXT:</strong><br/> 
- <span>centos6下安装redis
+ <span>CentOS系统中常用查看日志命令
 </span>
 </a>
 </div>
@@ -169,7 +223,7 @@
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#一、NAT模式（VS-NAT）"><span class="toc-number">1.</span> <span class="toc-text">一、NAT模式（VS-NAT）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#二、IP隧道模式（VS-TUN）"><span class="toc-number">2.</span> <span class="toc-text">二、IP隧道模式（VS-TUN）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#三、直接路由模式（VS-DR）"><span class="toc-number">3.</span> <span class="toc-text">三、直接路由模式（VS-DR）</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Server:"><span class="toc-number">1.</span> <span class="toc-text">Server:</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#client:"><span class="toc-number">2.</span> <span class="toc-text">client:</span></a></li></ol>
   </div>
 
 <div id="asidepart">
