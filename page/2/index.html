@@ -73,6 +73,44 @@
 
   <section class="post" itemscope itemprop="blogPost">
   
+    <a href="/2014/12/20/centos6下安装redis/" title="centos6下安装redis" itemprop="url">
+  
+      <time datetime="2014-12-20T06:46:11.000Z" itemprop="datePublished">12月 20 2014</time>
+    <h1 itemprop="name">centos6下安装redis</h1>
+    
+     
+           <p itemprop="description" >安装ridis前，先安装gcc和tcl
+gcc的安装:
+yum install gcc-c++
+tcl的安装:
+yum install -y tcl
+安装完成后，开始安装redis，先下载redis的源码并编译
+wget http://download.redis.io/redi</p>
+        
+    
+  </a>
+</section>
+
+  <section class="post" itemscope itemprop="blogPost">
+  
+    <a href="/2014/12/20/redis的5种数据类型及基本操作/" title="redis的5种数据类型及基本操作" itemprop="url">
+  
+      <time datetime="2014-12-20T06:36:17.000Z" itemprop="datePublished">12月 20 2014</time>
+    <h1 itemprop="name">redis的5种数据类型及基本操作</h1>
+    
+     
+           <p itemprop="description" >Redis支持5种类型的数据类型
+1.字符串
+Redis字符串是字节序列。Redis字符串是二进制安全的，这意味着他们有一个已知的长度没有任何特殊字符终止，所以你可以存储任何东西，512兆为上限。
+例子
+redis 127.0.0.1:6379&amp;gt; SET name &quot;han</p>
+        
+    
+  </a>
+</section>
+
+  <section class="post" itemscope itemprop="blogPost">
+  
     <a href="/2014/12/20/virtualbox复制centos虚拟机/" title="virtualbox复制centos虚拟机" itemprop="url">
   
       <time datetime="2014-12-20T06:30:47.000Z" itemprop="datePublished">12月 20 2014</time>
@@ -112,20 +150,6 @@
 BOOTPROTO=static
 ONBOOT=yes
 TYPE=Eth</p>
-        
-    
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/2014/12/20/hello-world/" title="Hello World" itemprop="url">
-  
-      <time datetime="2014-12-20T05:59:31.000Z" itemprop="datePublished">12月 20 2014</time>
-    <h1 itemprop="name">Hello World</h1>
-    
-     
-           <p itemprop="description" >Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the </p>
         
     
   </a>
@@ -208,9 +232,11 @@ TYPE=Eth</p>
 		
 			<li><a href="/tags/condition/" title="condition">condition<sup>1</sup></a></li>
 		
-			<li><a href="/tags/java/" title="java">java<sup>2</sup></a></li>
+			<li><a href="/tags/java/" title="java">java<sup>3</sup></a></li>
 		
 			<li><a href="/tags/jdbcTemplate/" title="jdbcTemplate">jdbcTemplate<sup>1</sup></a></li>
+		
+			<li><a href="/tags/jvm/" title="jvm">jvm<sup>1</sup></a></li>
 		
 			<li><a href="/tags/linux/" title="linux">linux<sup>4</sup></a></li>
 		
@@ -266,7 +292,7 @@ TYPE=Eth</p>
   <div class="tagcloudlist">
     <p class="asidetitle">标签云</p>
     <div class="tagcloudlist clearfix">
-       <a href="/tags/cache/" style="font-size: 13.33px;">cache</a><a href="/tags/centos/" style="font-size: 20.00px;">centos</a><a href="/tags/condition/" style="font-size: 10.00px;">condition</a><a href="/tags/java/" style="font-size: 13.33px;">java</a><a href="/tags/jdbcTemplate/" style="font-size: 10.00px;">jdbcTemplate</a><a href="/tags/linux/" style="font-size: 20.00px;">linux</a><a href="/tags/lock/" style="font-size: 13.33px;">lock</a><a href="/tags/log/" style="font-size: 10.00px;">log</a><a href="/tags/lvs/" style="font-size: 10.00px;">lvs</a><a href="/tags/python/" style="font-size: 10.00px;">python</a><a href="/tags/redis/" style="font-size: 13.33px;">redis</a><a href="/tags/shell/" style="font-size: 10.00px;">shell</a><a href="/tags/socket/" style="font-size: 10.00px;">socket</a><a href="/tags/ubuntu/" style="font-size: 10.00px;">ubuntu</a><a href="/tags/vi/" style="font-size: 10.00px;">vi</a><a href="/tags/多线程/" style="font-size: 16.67px;">多线程</a><a href="/tags/线程池/" style="font-size: 10.00px;">线程池</a><a href="/tags/缓存/" style="font-size: 10.00px;">缓存</a><a href="/tags/虚拟机/" style="font-size: 10.00px;">虚拟机</a>
+       <a href="/tags/cache/" style="font-size: 13.33px;">cache</a><a href="/tags/centos/" style="font-size: 20.00px;">centos</a><a href="/tags/condition/" style="font-size: 10.00px;">condition</a><a href="/tags/java/" style="font-size: 16.67px;">java</a><a href="/tags/jdbcTemplate/" style="font-size: 10.00px;">jdbcTemplate</a><a href="/tags/jvm/" style="font-size: 10.00px;">jvm</a><a href="/tags/linux/" style="font-size: 20.00px;">linux</a><a href="/tags/lock/" style="font-size: 13.33px;">lock</a><a href="/tags/log/" style="font-size: 10.00px;">log</a><a href="/tags/lvs/" style="font-size: 10.00px;">lvs</a><a href="/tags/python/" style="font-size: 10.00px;">python</a><a href="/tags/redis/" style="font-size: 13.33px;">redis</a><a href="/tags/shell/" style="font-size: 10.00px;">shell</a><a href="/tags/socket/" style="font-size: 10.00px;">socket</a><a href="/tags/ubuntu/" style="font-size: 10.00px;">ubuntu</a><a href="/tags/vi/" style="font-size: 10.00px;">vi</a><a href="/tags/多线程/" style="font-size: 16.67px;">多线程</a><a href="/tags/线程池/" style="font-size: 10.00px;">线程池</a><a href="/tags/缓存/" style="font-size: 10.00px;">缓存</a><a href="/tags/虚拟机/" style="font-size: 10.00px;">虚拟机</a>
     </div>
   </div>
 

@@ -7,21 +7,18 @@
   <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8" />
 <meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88" />
   
-    <title>ubuntu12.04 在virtualbox下桥接 centos 虚拟机 | Hang&#39;s blog</title>
+    <title>Java虚拟机学习 - 体系结构 内存模型 | Hang&#39;s blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="hang">
     
-    <meta name="description" content="1.主机的网络环境
- 
-2.设置virualbox的网络连接方式
-选择桥接网络，并选择eth0
-3.修改虚拟机的网络配置
-修改/etc/sysconfig/network-script/ifcfg-eth0
-BOOTPROTO=static
-ONBOOT=yes
-TYPE=Ethernet
-IPAD">
+    <meta name="description" content="一：Java技术体系模块图
+
+二：JVM内存区域模型
+
+ 在JVM内存区域模型中，方法区和堆都是线程共享的数据区
+1.方法区
+也称“永久代” 、“非堆”，  它用于存储虚拟机加载的类信息、常量、静态变量、是各个线程共享的内存区域。默认最小值为16MB，最大值为64MB，可以通过-XX:PermSiz">
     
     
     
@@ -84,15 +81,15 @@ IPAD">
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2014/12/20/ubuntu12-04-在virtualbox下桥接-centos-虚拟机/" title="ubuntu12.04 在virtualbox下桥接 centos 虚拟机" itemprop="url">ubuntu12.04 在virtualbox下桥接 centos 虚拟机</a>
+      <a href="/2015/03/09/Java虚拟机学习-体系结构-内存模型/" title="Java虚拟机学习 - 体系结构 内存模型" itemprop="url">Java虚拟机学习 - 体系结构 内存模型</a>
   </h1>
   <p class="article-author">By
     
       <a href="www.lkh.im" title="hang">hang</a>
     </p>
   <p class="article-time">
-    <time datetime="2014-12-20T06:08:06.000Z" itemprop="datePublished">12月 20 2014</time>
-    更新日期:<time datetime="2014-12-27T06:14:05.000Z" itemprop="dateModified">12月 27 2014</time>
+    <time datetime="2015-03-09T02:12:50.000Z" itemprop="datePublished">3月 9 2015</time>
+    更新日期:<time datetime="2015-03-09T02:26:48.000Z" itemprop="dateModified">3月 9 2015</time>
     
   </p>
 </header>
@@ -101,50 +98,48 @@ IPAD">
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-主机的网络环境"><span class="toc-number">1.</span> <span class="toc-text">1.主机的网络环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-设置virualbox的网络连接方式"><span class="toc-number">2.</span> <span class="toc-text">2.设置virualbox的网络连接方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-修改虚拟机的网络配置"><span class="toc-number">3.</span> <span class="toc-text">3.修改虚拟机的网络配置</span></a></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#一：Java技术体系模块图"><span class="toc-number">1.</span> <span class="toc-text">一：Java技术体系模块图</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#二：JVM内存区域模型"><span class="toc-number">2.</span> <span class="toc-text">二：JVM内存区域模型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-方法区"><span class="toc-number">2.1.</span> <span class="toc-text">1.方法区</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-虚拟机栈"><span class="toc-number">2.2.</span> <span class="toc-text">2.虚拟机栈</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-本地方法栈"><span class="toc-number">2.3.</span> <span class="toc-text">3.本地方法栈</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-堆"><span class="toc-number">2.4.</span> <span class="toc-text">4.堆</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-程序计数器"><span class="toc-number">2.5.</span> <span class="toc-text">5.程序计数器</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#三：直接内存"><span class="toc-number">3.</span> <span class="toc-text">三：直接内存</span></a></li></ol>
 		</div>
 		
-		<h2 id="1-主机的网络环境">1.主机的网络环境</h2>
-<p><img src="/images/2014/12/20/1.jpeg" alt=""> </p>
-<h2 id="2-设置virualbox的网络连接方式">2.设置virualbox的网络连接方式</h2>
-<p><img src="/images/2014/12/20/2.jpeg" alt=""><br>选择桥接网络，并选择eth0</p>
-<h2 id="3-修改虚拟机的网络配置">3.修改虚拟机的网络配置</h2>
-<p>修改/etc/sysconfig/network-script/ifcfg-eth0</p>
-<p>BOOTPROTO=static</p>
-<p>ONBOOT=yes</p>
-<p>TYPE=Ethernet</p>
-<p>IPADDR=172.16.3.166      //虚拟机的ip</p>
-<p>NETMASK=255.255.255.0  //子网掩码</p>
-<p>GATEWAY=172.16.3.254   //网关</p>
-<p>然后需要添加dns</p>
-<p>vi /etc/resolv.conf</p>
-<p>nameserver 202.96.128.86 </p>
-<p>重启网络</p>
-<p>service network restart</p>
-<p>再查看虚拟机的ip，eth0的ip已经变修改成更主机相同的网段<br><img src="/images/2014/12/20/3.jpeg" alt=""> </p>
-<p>并ping通主机<br><img src="/images/2014/12/20/4.jpeg" alt=""> </p>
-<p>再尝试通过主机shh到centos虚拟上<br><img src="/images/2014/12/20/5.jpeg" alt=""> </p>
-<p>现在主机和虚拟机已经是通个网段上，并且连通了</p>
+		<h1 id="一：Java技术体系模块图">一：Java技术体系模块图</h1>
+<p><img src="/images/2015/3/9/1.jpeg" alt=""></p>
+<h1 id="二：JVM内存区域模型">二：JVM内存区域模型</h1>
+<p><img src="/images/2015/3/9/2.jpeg" alt=""></p>
+<p> 在JVM内存区域模型中，方法区和堆都是线程共享的数据区</p>
+<h2 id="1-方法区">1.方法区</h2>
+<p>也称“永久代” 、“非堆”，  它用于存储虚拟机加载的类信息、常量、静态变量、是各个线程共享的内存区域。默认最小值为16MB，最大值为64MB，可以通过-XX:PermSize 和 -XX:MaxPermSize 参数限制方法区的大小。</p>
+<p>运行时常量池：是方法区的一部分，Class文件中除了有类的版本、字段、方法、接口等描述信息外，还有一项信息是常量池，用于存放编译器生成的各种符号引用，这部分内容将在类加载后放到方法区的运行时常量池中。</p>
+<h2 id="2-虚拟机栈">2.虚拟机栈</h2>
+<p>描述的是java 方法执行的内存模型：每个方法被执行的时候 都会创建一个“栈帧”用于存储局部变量表(包括参数)、操作栈、方法出口等信息。每个方法被调用到执行完的过程，就对应着一个栈帧在虚拟机栈中从入栈到出栈的过程。声明周期与线程相同，是线程私有的。</p>
+<p>局部变量表存放了编译器可知的各种基本数据类型(boolean、byte、char、short、int、float、long、 double)、对象引用(引用指针，并非对象本身)，其中64位长度的long和double类型的数据会占用2个局部变量的空间，其余数据类型只占1 个。局部变量表所需的内存空间在编译期间完成分配，当进入一个方法时，这个方法需要在栈帧中分配多大的局部变量是完全确定的，在运行期间栈帧不会改变局部 变量表的大小空间。</p>
+<h2 id="3-本地方法栈">3.本地方法栈</h2>
+<p>与虚拟机栈基本类似，区别在于虚拟机栈为虚拟机执行的java方法服务，而本地方法栈则是为Native方法服务。</p>
+<h2 id="4-堆">4.堆</h2>
+<p>也叫做java 堆、GC堆是java虚拟机所管理的内存中最大的一块内存区域，也是被各个线程共享的内存区域，在JVM启动时创建。该内存区域存放了对象实例及数组(所有new的对象)。其大小通过-Xms(最小值)和-Xmx(最大值)参数设置，-Xms为JVM启动时申请的最小内存，默认为操作系统物理内存的1/64但小于1G，-Xmx为JVM可申请的最大内存，默认为物理内存的1/4但小于1G，默认当空余堆内存小于40%时，JVM会增大Heap到-Xmx指定的大小，可通过-XX:MinHeapFreeRation=来指定这个比列；当空余堆内存大于70%时，JVM会减小heap的大小到-Xms指定的大小，可通过XX:MaxHeapFreeRation=来指定这个比列，对于运行系统，为避免在运行时频繁调整Heap的大小，通常-Xms与-Xmx的值设成一样。</p>
+<p>由于现在收集器都是采用分代收集算法，堆被划分为新生代和老年代。新生代主要存储新创建的对象和尚未进入老年代的对象。老年代存储经过多次新生代GC(Minor GC)任然存活的对象。<br>        新生代：</p>
+<p>程序新创建的对象都是从新生代分配内存，新生代由Eden Space和两块相同大小的Survivor Space(通常又称S0和S1或From和To)构成，可通过-Xmn参数来指定新生代的大小，也可以通过-XX:SurvivorRation来调整Eden Space及Survivor Space的大小。</p>
+<pre><code>    老年代：
+</code></pre><p>用于存放经过多次新生代GC任然存活的对象，例如缓存对象，新建的对象也有可能直接进入 老年代，主要有两种情况：①.大对象，可通过启动参数设置-XX:PretenureSizeThreshold=1024(单位为字节，默认为0)来代 表超过多大时就不在新生代分配，而是直接在老年代分配。②.大的数组对象，切数组中无引用外部对象。<br><img src="/images/2015/3/9/3.jpeg" alt=""></p>
+<p>老年代所占的内存大小为-Xmx对应的值减去-Xmn对应的值。</p>
+<h2 id="5-程序计数器">5.程序计数器</h2>
+<p>程序计数器是一块比较小的内存空间，它可以看作是当前线程所执行的字节码的行号指示器。在虚拟机的概念模型里，字节码解释器工作时就是通过改变这个计数器的值来选择下一条需要执行的字节码指令，分支，循环，跳转，异常处理，线程恢复等基础功能都需要依赖这个计数器来完成。</p>
+<h1 id="三：直接内存">三：直接内存</h1>
+<p>直接内存并不是虚拟机内存的一部分，也不是Java虚拟机规范中定义的内存区域。jdk1.4中新加入的NIO，引入了通道与缓冲区的IO方式，它可以调用Native方法直接分配堆外内存，这个堆外内存就是本机内存，不会影响到堆内存的大小。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/ubuntu/">ubuntu</a><a href="/tags/linux/">linux</a><a href="/tags/centos/">centos</a>
+  <span></span> <a href="/tags/java/">java</a><a href="/tags/jvm/">jvm</a>
   </div>
 
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/运维/">运维</a>
-</div>
 
 
 
 <div class="article-share" id="share">
 
-  <div data-url="www.lkh.im/2014/12/20/ubuntu12-04-在virtualbox下桥接-centos-虚拟机/" data-title="ubuntu12.04 在virtualbox下桥接 centos 虚拟机 | Hang&#39;s blog" data-tsina="null" class="share clearfix">
+  <div data-url="www.lkh.im/2015/03/09/Java虚拟机学习-体系结构-内存模型/" data-title="Java虚拟机学习 - 体系结构 内存模型 | Hang&#39;s blog" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -154,18 +149,18 @@ IPAD">
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2014/12/20/virtualbox复制centos虚拟机/" title="virtualbox复制centos虚拟机">
+ <a href="/2015/03/09/hello-world/" title="Hello World">
   <strong>PREVIOUS:</strong><br/>
   <span>
-  virtualbox复制centos虚拟机</span>
+  Hello World</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/2014/12/20/jdbcTemplate/"  title="jdbcTemplate">
+<a href="/2015/01/29/python利用多线程socket模拟ftp实现简单的下载/"  title="python利用多线程socket模拟ftp实现简单的下载">
  <strong>NEXT:</strong><br/> 
- <span>jdbcTemplate
+ <span>python利用多线程socket模拟ftp实现简单的下载
 </span>
 </a>
 </div>
@@ -182,7 +177,7 @@ IPAD">
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-主机的网络环境"><span class="toc-number">1.</span> <span class="toc-text">1.主机的网络环境</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-设置virualbox的网络连接方式"><span class="toc-number">2.</span> <span class="toc-text">2.设置virualbox的网络连接方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-修改虚拟机的网络配置"><span class="toc-number">3.</span> <span class="toc-text">3.修改虚拟机的网络配置</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#一：Java技术体系模块图"><span class="toc-number">1.</span> <span class="toc-text">一：Java技术体系模块图</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#二：JVM内存区域模型"><span class="toc-number">2.</span> <span class="toc-text">二：JVM内存区域模型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-方法区"><span class="toc-number">2.1.</span> <span class="toc-text">1.方法区</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-虚拟机栈"><span class="toc-number">2.2.</span> <span class="toc-text">2.虚拟机栈</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-本地方法栈"><span class="toc-number">2.3.</span> <span class="toc-text">3.本地方法栈</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-堆"><span class="toc-number">2.4.</span> <span class="toc-text">4.堆</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-程序计数器"><span class="toc-number">2.5.</span> <span class="toc-text">5.程序计数器</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#三：直接内存"><span class="toc-number">3.</span> <span class="toc-text">三：直接内存</span></a></li></ol>
   </div>
 
 <div id="asidepart">
