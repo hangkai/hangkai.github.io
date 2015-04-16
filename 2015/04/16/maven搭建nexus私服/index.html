@@ -12,16 +12,8 @@
     
     <meta name="author" content="hang">
     
-    <meta name="description" content="1.Nexus下载
-
-下载地址：http://www.sonatype.org/nexus/go
-
-2.Nexus启动
-
-   这里下载的是2.11.2版本
-   先解压tar zxcf nexus-2.11.2-06-bundle.tar.gz
-   cd nexus-2.11.2-06/bin
-">
+    <meta name="description" content="1.Nexus下载下载地址：http://www.sonatype.org/nexus/go
+2.Nexus启动   这里下载的是2.11.2版本      先解压tar zxcf nexus-2.11.2-06-bundle.tar.gz      cd nexus-2.11.2-06/bin  ">
     
     
     
@@ -92,7 +84,7 @@
     </p>
   <p class="article-time">
     <time datetime="2015-04-16T03:25:37.000Z" itemprop="datePublished">4月 16 2015</time>
-    更新日期:<time datetime="2015-04-16T03:26:50.000Z" itemprop="dateModified">4月 16 2015</time>
+    更新日期:<time datetime="2015-04-16T03:45:10.000Z" itemprop="dateModified">4月 16 2015</time>
     
   </p>
 </header>
@@ -104,57 +96,34 @@
 		<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">1.Nexus下载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">2.Nexus启动</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">3.Nexus仓库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">4.</span> <span class="toc-text">4.建立本地仓库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">5.</span> <span class="toc-text">5.往本地仓库中添加依赖</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">6.</span> <span class="toc-text">6.在maven项目中引入本地仓库依赖</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">6.1.</span> <span class="toc-text">1.在项目pom中配置相关私服信息</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">6.2.</span> <span class="toc-text">2.找到maven安装目录下的conf/setting.xml文件，添加Nexus仓库访问权限 </span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">6.3.</span> <span class="toc-text">3.选择Tab中的Browse Index，找到本地仓库对应的jar包，获取对应的pom文件的依赖配置，并添加到pom.xml </span></a></li></ol></li></ol>
 		</div>
 		
-		<p><h3>1.Nexus下载</h3></p>
-<blockquote>
-<p>下载地址：<a href="http://www.sonatype.org/nexus/go" target="_blank" rel="external">http://www.sonatype.org/nexus/go</a></p>
-</blockquote>
-<p><h3>2.Nexus启动</h3></p>
-<blockquote>
-<pre><code>   这里下载的是<span class="number">2.11</span><span class="number">.2</span>版本
-   先解压tar zxcf nexus-<span class="number">2.11</span><span class="number">.2</span>-<span class="number">06</span>-<span class="transposed_variable">bundle.</span><span class="transposed_variable">tar.</span>gz
-   <span class="built_in">cd</span> nexus-<span class="number">2.11</span><span class="number">.2</span>-<span class="number">06</span>/bin
-   改目录下有三个文件jsw  nexus  <span class="transposed_variable">nexus.</span>bat其中nexus是在Linux下的启动脚本
-   运行./nexus start启动nexus服务
-   浏览器中输入http:<span class="comment">//127.0.0.1:8081/nexus/，出现下图所示就代表nexus已经启动成功。</span>
-</code></pre><p><img src="/images/2015/04/16/1.jpeg" alt=""></p>
-<pre><code>   8081为默认的端口号，要修改端口号可进入nexus-2.11.2-06<span class="command">\conf</span><span class="command">\打</span>开nexus.properties文件，修改application-port属性值就可以了。
-   默认的用户名和密码：admin/admin123，登录后看到下图：
-</code></pre><p><img src="/images/2015/04/16/2.jpeg" alt=""></p>
-</blockquote>
-<p><h3>3.Nexus仓库</h3></p>
-<blockquote>
-<pre><code>   nexus的仓库类型分为以下四种：
-          <span class="keyword">group</span>: 仓库组
-          hosted：宿主
-         proxy：代理
-         virtual：虚拟
-    一般用到的仓库种类是hosted、proxy。Hosted代表宿主仓库，用来发布一些第三方不允许的组件，比如oracle驱动、比如商业软件jar包。Proxy代表代理远程的仓库，最典型的就是Maven  官方中央仓库、JBoss仓库等等。如果构建的Maven项目本地仓库没有依赖包，那么就会去这个代理站点去下载，那么如果代理站点也没有此依赖包，就回去远程中央仓库下载依赖，这些中央仓库就是proxy。代理站点下载成功后再下载至本机。
+		<p><h3>1.Nexus下载</h3><br>下载地址：<a href="http://www.sonatype.org/nexus/go" target="_blank" rel="external">http://www.sonatype.org/nexus/go</a></p>
+<p><h3>2.Nexus启动</h3><br>   这里下载的是2.11.2版本<br>      先解压tar zxcf nexus-2.11.2-06-bundle.tar.gz<br>      cd nexus-2.11.2-06/bin<br>      改目录下有三个文件jsw  nexus  nexus.bat其中nexus是在Linux下的启动脚本<br>      运行./nexus start启动nexus服务<br>      浏览器中输入<a href="http://127.0.0.1:8081/nexus/，出现下图所示就代表nexus已经启动成功。" target="_blank" rel="external">http://127.0.0.1:8081/nexus/，出现下图所示就代表nexus已经启动成功。</a><br><img src="/images/2015/04/16/1.jpeg" alt=""></p>
+<p>8081为默认的端口号，要修改端口号可进入nexus-2.11.2-06\conf\打开nexus.properties文件，修改application-port属性值就可以了。<br>      默认的用户名和密码：admin/admin123，登录后看到下图：<br><img src="/images/2015/04/16/2.jpeg" alt=""></p>
+<p><h3>3.Nexus仓库</h3><br>nexus的仓库类型分为以下四种：</p>
+<ul>
+<li>group: 仓库组</li>
+<li>hosted：宿主</li>
+<li>proxy：代理</li>
+<li><p>virtual：虚拟</p>
+<pre><code> 一般用到的仓库种类是hosted、proxy。Hosted代表宿主仓库，用来发布一些第三方不允许的组件，比如oracle驱动、比如商业软件jar包。Proxy代表代理远程的仓库，最典型的就是Maven  官方中央仓库、JBoss仓库等等。如果构建的Maven项目本地仓库没有依赖包，那么就会去这个代理站点去下载，那么如果代理站点也没有此依赖包，就回去远程中央仓库下载依赖，这些中央仓库就是proxy。代理站点下载成功后再下载至本机。
 
-       首次登陆nexus后可以看到以下一个仓库组和多个仓库。
-   <span class="keyword">Public</span> <span class="keyword">Repositories</span>:  仓库组
-   <span class="number">3</span>rd party: 无法从公共仓库获得的第三方发布版本的构件仓库
-   Apache Snapshots: 用了代理ApacheMaven仓库快照版本的构件仓库
-   Central: 用来代理maven中央仓库中发布版本构件的仓库
-   Central M1 shadow: 用于提供中央仓库中M1格式的发布版本的构件镜像仓库
-   Codehaus Snapshots: 用来代理CodehausMaven 仓库的快照版本构件的仓库
-   Releases: 用来部署管理内部的发布版本构件的宿主类型仓库
-   Snapshots:用来部署管理内部的快照版本构件的宿主类型仓库
-</code></pre></blockquote>
-<p><h3>4.建立本地仓库</h3></p>
-<blockquote>
-<pre><code>   先添加一个Hosted Repository
-</code></pre><p><img src="/images/2015/04/16/3.jpeg" alt=""></p>
-</blockquote>
+首次登陆nexus后可以看到以下一个仓库组和多个仓库。
+</code></pre></li>
+<li><p>Public Repositories:  仓库组</p>
+</li>
+<li>3rd party: 无法从公共仓库获得的第三方发布版本的构件仓库</li>
+<li>Apache Snapshots: 用了代理ApacheMaven仓库快照版本的构件仓库</li>
+<li>Central: 用来代理maven中央仓库中发布版本构件的仓库</li>
+<li>Central M1 shadow: 用于提供中央仓库中M1格式的发布版本的构件镜像仓库</li>
+<li>Codehaus Snapshots: 用来代理CodehausMaven 仓库的快照版本构件的仓库</li>
+<li>Releases: 用来部署管理内部的发布版本构件的宿主类型仓库</li>
+<li>Snapshots:用来部署管理内部的快照版本构件的宿主类型仓库</li>
+</ul>
+<p><h3>4.建立本地仓库</h3><br>先添加一个Hosted Repository<br><img src="/images/2015/04/16/3.jpeg" alt=""></p>
 <p><img src="/images/2015/04/16/4.jpeg" alt=""></p>
-<blockquote>
-<pre><code>    填写RepositoryID，RepositoryName然后save。
-</code></pre></blockquote>
-<p><h3>5.往本地仓库中添加依赖</h3></p>
-<blockquote>
-<pre><code>    选择刚刚建立的仓库，在右下方的Tab选择Artifact Upload，如下图，填写依赖包的<span class="keyword">Group</span>，Artifact，Version，点击<span class="keyword">Add</span> Artifact。如果要往这个仓库中添加多个依赖，就重复<span class="keyword">Add</span> Artifact
-</code></pre><p><img src="/images/2015/04/16/5.jpeg" alt=""></p>
-<pre><code>   最后Upload Artifact
-</code></pre></blockquote>
+<p>填写RepositoryID，RepositoryName然后save。</p>
+<p><h3>5.往本地仓库中添加依赖</h3><br>选择刚刚建立的仓库，在右下方的Tab选择Artifact Upload，如下图，填写依赖包的Group，Artifact，Version，点击Add Artifact。如果要往这个仓库中添加多个依赖，就重复Add Artifact<br><img src="/images/2015/04/16/5.jpeg" alt=""></p>
+<p> 最后Upload Artifact</p>
 <p><h3>6.在maven项目中引入本地仓库依赖</h3><br> <h4>1.在项目pom中配置相关私服信息</h4></p>
 <pre><code><span class="tag">&lt;<span class="title">repositories</span>&gt;</span> 
         <span class="tag">&lt;<span class="title">repository</span>&gt;</span> 
@@ -169,10 +138,7 @@
             <span class="tag">&lt;/<span class="title">snapshots</span>&gt;</span> 
         <span class="tag">&lt;/<span class="title">repository</span>&gt;</span> 
    <span class="tag">&lt;/<span class="title">repositories</span>&gt;</span> 
-</code></pre><blockquote>
-<pre><code>   其中的url可以在Summary获取到，如下图位置
-</code></pre><p><img src="/images/2015/04/16/6.jpeg" alt=""></p>
-</blockquote>
+</code></pre><p>其中的url可以在Summary获取到，如下图位置<br><img src="/images/2015/04/16/6.jpeg" alt=""></p>
  <h4>2.找到maven安装目录下的conf/setting.xml文件，添加Nexus仓库访问权限 </h4>
 
 <pre><code> <span class="tag">&lt;<span class="title">servers</span>&gt;</span>
@@ -183,9 +149,7 @@
        <span class="tag">&lt;/<span class="title">server</span>&gt;</span>
   <span class="tag">&lt;/<span class="title">servers</span>&gt;</span>
 </code></pre><p> <h4>3.选择Tab中的Browse Index，找到本地仓库对应的jar包，获取对应的pom文件的依赖配置，并添加到pom.xml </h4><br><img src="/images/2015/04/16/7.jpeg" alt=""></p>
-<blockquote>
-<pre><code>   这样我们在项目的pom中添加入了下面的依赖配置后就能从本地仓库引入依赖了
-</code></pre></blockquote>
+<p>这样我们在项目的pom中添加入了下面的依赖配置后就能从本地仓库引入依赖了</p>
 <pre><code><span class="tag">&lt;<span class="title">dependency</span>&gt;</span>
   <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>com.hang<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
   <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>testProject<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
