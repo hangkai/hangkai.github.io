@@ -7,14 +7,21 @@
   <meta name="360-site-verification" content="67fbcc5a67f4c65c057315b28fa0b2c8" />
 <meta name="google-site-verification" content="2GzxQ0VtXwTSUdmGm6DzcmhTzM_I9QmzCb_pzpMzD88" />
   
-    <title>LVS 三种工作模式原理、以及优缺点比较 | Hang&#39;s blog</title>
+    <title>maven搭建nexus私服 | Hang&#39;s blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="hang">
     
-    <meta name="description" content="一、NAT模式（VS-NAT）
-原理：
-就是把客户端发来的数据包的IP头的目的地址，在负载均衡器上换成其中一台RS 的IP地址，并发至此RS来处理,RS处理完成后把数据交给经过负载均衡器,负载均衡器再把数据包的原IP地址改为自己的IP，将目的地址改为客户端IP 地址即可｡期间,无论是进来的流量,还是">
+    <meta name="description" content="1.Nexus下载
+
+下载地址：http://www.sonatype.org/nexus/go
+
+2.Nexus启动
+
+   这里下载的是2.11.2版本
+   先解压tar zxcf nexus-2.11.2-06-bundle.tar.gz
+   cd nexus-2.11.2-06/bin
+">
     
     
     
@@ -77,15 +84,15 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2014/12/27/LVS-三种工作模式原理、以及优缺点比较/" title="LVS 三种工作模式原理、以及优缺点比较" itemprop="url">LVS 三种工作模式原理、以及优缺点比较</a>
+      <a href="/2015/04/16/maven搭建nexus私服/" title="maven搭建nexus私服" itemprop="url">maven搭建nexus私服</a>
   </h1>
   <p class="article-author">By
     
       <a href="www.lkh.im" title="hang">hang</a>
     </p>
   <p class="article-time">
-    <time datetime="2014-12-27T06:05:34.000Z" itemprop="datePublished">12月 27 2014</time>
-    更新日期:<time datetime="2014-12-27T06:10:07.000Z" itemprop="dateModified">12月 27 2014</time>
+    <time datetime="2015-04-16T03:25:37.000Z" itemprop="datePublished">4月 16 2015</time>
+    更新日期:<time datetime="2015-04-16T03:26:50.000Z" itemprop="dateModified">4月 16 2015</time>
     
   </p>
 </header>
@@ -94,44 +101,116 @@
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#一、NAT模式（VS-NAT）"><span class="toc-number">1.</span> <span class="toc-text">一、NAT模式（VS-NAT）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#二、IP隧道模式（VS-TUN）"><span class="toc-number">2.</span> <span class="toc-text">二、IP隧道模式（VS-TUN）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#三、直接路由模式（VS-DR）"><span class="toc-number">3.</span> <span class="toc-text">三、直接路由模式（VS-DR）</span></a></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">1.Nexus下载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">2.Nexus启动</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">3.Nexus仓库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">4.</span> <span class="toc-text">4.建立本地仓库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">5.</span> <span class="toc-text">5.往本地仓库中添加依赖</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">6.</span> <span class="toc-text">6.在maven项目中引入本地仓库依赖</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">6.1.</span> <span class="toc-text">1.在项目pom中配置相关私服信息</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">6.2.</span> <span class="toc-text">2.找到maven安装目录下的conf/setting.xml文件，添加Nexus仓库访问权限 </span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">6.3.</span> <span class="toc-text">3.选择Tab中的Browse Index，找到本地仓库对应的jar包，获取对应的pom文件的依赖配置，并添加到pom.xml </span></a></li></ol></li></ol>
 		</div>
 		
-		<h1 id="一、NAT模式（VS-NAT）">一、NAT模式（VS-NAT）</h1>
-<p>原理：</p>
-<p>就是把客户端发来的数据包的IP头的目的地址，在负载均衡器上换成其中一台RS 的IP地址，并发至此RS来处理,RS处理完成后把数据交给经过负载均衡器,负载均衡器再把数据包的原IP地址改为自己的IP，将目的地址改为客户端IP 地址即可｡期间,无论是进来的流量,还是出去的流量,都必须经过负载均衡器｡</p>
-<p>优点：集群中的物理服务器可以使用任何支持TCP/IP操作系统，只有负载均衡器需要一个合法的IP地址。</p>
-<p>缺点：扩展性有限。当服务器节点（普通PC服务器）增长过多时,负载均衡器将成为整个系统的瓶颈，因为所有的请求包和应答包的流向都经过负载均衡器。当服务器节点过多时，大量的数据包都交汇在负载均衡器那，速度就会变慢！</p>
-<h1 id="二、IP隧道模式（VS-TUN）">二、IP隧道模式（VS-TUN）</h1>
-<p>原理：</p>
-<p>首先要知道，互联网上的大多Internet服务的请求包很短小，而应答包通常很大。那么隧道模式就是，把客户端发来的数据包，封装一个新的IP头标记(仅目的IP)发给RS,RS收到后,先把数据包的头解开,还原数据包,处理后,直接返回给客户端,不需要再经过负载均衡器｡注意,由于RS需要对负载均衡器 发过来的数据包进行还原,所以说必须支持IPTUNNEL协议｡所以,在RS的内核中,必须编译支持IPTUNNEL这个选项</p>
-<p>优点：负载均衡器只负责将请求包分发给后端节点服务器，而RS将应答包直接发给用户。所以，减少了负载均衡器的大量数据流动，负载均衡器不再是系统的瓶颈，就能处理很巨大的请求量，这种方式，一台负载均衡器能够为很多RS进行分发。而且跑在公网上就能进行不同地域的分发。</p>
-<p>缺点：隧道模式的RS节点需要合法IP，这种方式需要所有的服务器支持”IP Tunneling”(IP Encapsulation)协议，服务器可能只局限在部分Linux系统上。</p>
-<h1 id="三、直接路由模式（VS-DR）">三、直接路由模式（VS-DR）</h1>
-<p>原理：</p>
-<p>负载均衡器和RS都使用同一个IP对外服务｡但只有DR对ARP请求进行响应,所有RS对本身这个IP的ARP请求保持静默｡也就是说,网关会把对这个服务 IP的请求全部定向给DR,而DR收到数据包后根据调度算法,找出对应的RS,把目的MAC地址改为RS的MAC（因为IP一致）并将请求分发给这台 RS｡这时RS收到这个数据包,处理完成之后，由于IP一致，可以直接将数据返给客户，则等于直接从客户端收到这个数据包无异,处理后直接返回给客户端｡ 由于负载均衡器要对二层包头进行改换,所以负载均衡器和RS之间必须在一个广播域,也可以简单的理解为在同一台交换机上｡</p>
-<p>优点：和TUN（隧道模式）一样，负载均衡器也只是分发请求，应答包通过单独的路由方法返回给客户端。与VS-TUN相比，VS-DR这种实现方式不需要隧道结构，因此可以使用大多数操作系统做为物理服务器。</p>
-<p>缺点：（不能说缺点，只能说是不足）要求负载均衡器的网卡必须与物理网卡在一个物理段上。</p>
-  
+		<p><h3>1.Nexus下载</h3></p>
+<blockquote>
+<p>下载地址：<a href="http://www.sonatype.org/nexus/go" target="_blank" rel="external">http://www.sonatype.org/nexus/go</a></p>
+</blockquote>
+<p><h3>2.Nexus启动</h3></p>
+<blockquote>
+<pre><code>   这里下载的是<span class="number">2.11</span><span class="number">.2</span>版本
+   先解压tar zxcf nexus-<span class="number">2.11</span><span class="number">.2</span>-<span class="number">06</span>-<span class="transposed_variable">bundle.</span><span class="transposed_variable">tar.</span>gz
+   <span class="built_in">cd</span> nexus-<span class="number">2.11</span><span class="number">.2</span>-<span class="number">06</span>/bin
+   改目录下有三个文件jsw  nexus  <span class="transposed_variable">nexus.</span>bat其中nexus是在Linux下的启动脚本
+   运行./nexus start启动nexus服务
+   浏览器中输入http:<span class="comment">//127.0.0.1:8081/nexus/，出现下图所示就代表nexus已经启动成功。</span>
+</code></pre><p><img src="/images/2015/04/16/1.jpeg" alt=""></p>
+<pre><code>   8081为默认的端口号，要修改端口号可进入nexus-2.11.2-06<span class="command">\conf</span><span class="command">\打</span>开nexus.properties文件，修改application-port属性值就可以了。
+   默认的用户名和密码：admin/admin123，登录后看到下图：
+</code></pre><p><img src="/images/2015/04/16/2.jpeg" alt=""></p>
+</blockquote>
+<p><h3>3.Nexus仓库</h3></p>
+<blockquote>
+<pre><code>   nexus的仓库类型分为以下四种：
+          <span class="keyword">group</span>: 仓库组
+          hosted：宿主
+         proxy：代理
+         virtual：虚拟
+    一般用到的仓库种类是hosted、proxy。Hosted代表宿主仓库，用来发布一些第三方不允许的组件，比如oracle驱动、比如商业软件jar包。Proxy代表代理远程的仓库，最典型的就是Maven  官方中央仓库、JBoss仓库等等。如果构建的Maven项目本地仓库没有依赖包，那么就会去这个代理站点去下载，那么如果代理站点也没有此依赖包，就回去远程中央仓库下载依赖，这些中央仓库就是proxy。代理站点下载成功后再下载至本机。
+
+       首次登陆nexus后可以看到以下一个仓库组和多个仓库。
+   <span class="keyword">Public</span> <span class="keyword">Repositories</span>:  仓库组
+   <span class="number">3</span>rd party: 无法从公共仓库获得的第三方发布版本的构件仓库
+   Apache Snapshots: 用了代理ApacheMaven仓库快照版本的构件仓库
+   Central: 用来代理maven中央仓库中发布版本构件的仓库
+   Central M1 shadow: 用于提供中央仓库中M1格式的发布版本的构件镜像仓库
+   Codehaus Snapshots: 用来代理CodehausMaven 仓库的快照版本构件的仓库
+   Releases: 用来部署管理内部的发布版本构件的宿主类型仓库
+   Snapshots:用来部署管理内部的快照版本构件的宿主类型仓库
+</code></pre></blockquote>
+<p><h3>4.建立本地仓库</h3></p>
+<blockquote>
+<pre><code>   先添加一个Hosted Repository
+</code></pre><p><img src="/images/2015/04/16/3.jpeg" alt=""></p>
+</blockquote>
+<p><img src="/images/2015/04/16/4.jpeg" alt=""></p>
+<blockquote>
+<pre><code>    填写RepositoryID，RepositoryName然后save。
+</code></pre></blockquote>
+<p><h3>5.往本地仓库中添加依赖</h3></p>
+<blockquote>
+<pre><code>    选择刚刚建立的仓库，在右下方的Tab选择Artifact Upload，如下图，填写依赖包的<span class="keyword">Group</span>，Artifact，Version，点击<span class="keyword">Add</span> Artifact。如果要往这个仓库中添加多个依赖，就重复<span class="keyword">Add</span> Artifact
+</code></pre><p><img src="/images/2015/04/16/5.jpeg" alt=""></p>
+<pre><code>   最后Upload Artifact
+</code></pre></blockquote>
+<p><h3>6.在maven项目中引入本地仓库依赖</h3><br> <h4>1.在项目pom中配置相关私服信息</h4></p>
+<pre><code><span class="tag">&lt;<span class="title">repositories</span>&gt;</span> 
+        <span class="tag">&lt;<span class="title">repository</span>&gt;</span> 
+            <span class="tag">&lt;<span class="title">id</span>&gt;</span>nexus<span class="tag">&lt;/<span class="title">id</span>&gt;</span> 
+            <span class="tag">&lt;<span class="title">name</span>&gt;</span>nexus<span class="tag">&lt;/<span class="title">name</span>&gt;</span> 
+            <span class="tag">&lt;<span class="title">url</span>&gt;</span>http://172.16.3.165:8081/nexus/content/repositories/testID<span class="tag">&lt;/<span class="title">url</span>&gt;</span> 
+            <span class="tag">&lt;<span class="title">releases</span>&gt;</span> 
+                <span class="tag">&lt;<span class="title">enabled</span>&gt;</span>true<span class="tag">&lt;/<span class="title">enabled</span>&gt;</span> 
+            <span class="tag">&lt;/<span class="title">releases</span>&gt;</span> 
+            <span class="tag">&lt;<span class="title">snapshots</span>&gt;</span> 
+                <span class="tag">&lt;<span class="title">enabled</span>&gt;</span>true<span class="tag">&lt;/<span class="title">enabled</span>&gt;</span> 
+            <span class="tag">&lt;/<span class="title">snapshots</span>&gt;</span> 
+        <span class="tag">&lt;/<span class="title">repository</span>&gt;</span> 
+   <span class="tag">&lt;/<span class="title">repositories</span>&gt;</span> 
+</code></pre><blockquote>
+<pre><code>   其中的url可以在Summary获取到，如下图位置
+</code></pre><p><img src="/images/2015/04/16/6.jpeg" alt=""></p>
+</blockquote>
+ <h4>2.找到maven安装目录下的conf/setting.xml文件，添加Nexus仓库访问权限 </h4>
+
+<pre><code> <span class="tag">&lt;<span class="title">servers</span>&gt;</span>
+       <span class="tag">&lt;<span class="title">server</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">id</span>&gt;</span>testID<span class="tag">&lt;/<span class="title">id</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">username</span>&gt;</span>admin<span class="tag">&lt;/<span class="title">username</span>&gt;</span>
+        <span class="tag">&lt;<span class="title">password</span>&gt;</span>admin123<span class="tag">&lt;/<span class="title">password</span>&gt;</span>
+       <span class="tag">&lt;/<span class="title">server</span>&gt;</span>
+  <span class="tag">&lt;/<span class="title">servers</span>&gt;</span>
+</code></pre><p> <h4>3.选择Tab中的Browse Index，找到本地仓库对应的jar包，获取对应的pom文件的依赖配置，并添加到pom.xml </h4><br><img src="/images/2015/04/16/7.jpeg" alt=""></p>
+<blockquote>
+<pre><code>   这样我们在项目的pom中添加入了下面的依赖配置后就能从本地仓库引入依赖了
+</code></pre></blockquote>
+<pre><code><span class="tag">&lt;<span class="title">dependency</span>&gt;</span>
+  <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>com.hang<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span>
+  <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>testProject<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span>
+  <span class="tag">&lt;<span class="title">version</span>&gt;</span>1.0<span class="tag">&lt;/<span class="title">version</span>&gt;</span>
+<span class="tag">&lt;/<span class="title">dependency</span>&gt;</span>
+</code></pre>  
 	</div>
 		<footer class="article-footer clearfix">
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/linux/">linux</a><a href="/tags/lvs/">lvs</a>
+  <span></span> <a href="/tags/maven/">maven</a>
   </div>
 
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/运维/">运维</a>
+  <a class="article-category-link" href="/categories/maven/">maven</a>
 </div>
 
 
 
 <div class="article-share" id="share">
 
-  <div data-url="www.lkh.im/2014/12/27/LVS-三种工作模式原理、以及优缺点比较/" data-title="LVS 三种工作模式原理、以及优缺点比较 | Hang&#39;s blog" data-tsina="null" class="share clearfix">
+  <div data-url="www.lkh.im/2015/04/16/maven搭建nexus私服/" data-title="maven搭建nexus私服 | Hang&#39;s blog" data-tsina="null" class="share clearfix">
   </div>
 
 </div>
@@ -140,19 +219,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2014/12/27/vi基本操作/" title="vi基本操作">
-  <strong>PREVIOUS:</strong><br/>
-  <span>
-  vi基本操作</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2014/12/20/centos6下安装redis/"  title="centos6下安装redis">
+<a href="/2015/03/09/Java虚拟机学习-体系结构-内存模型/"  title="Java虚拟机学习-体系结构-内存模型">
  <strong>NEXT:</strong><br/> 
- <span>centos6下安装redis
+ <span>Java虚拟机学习-体系结构-内存模型
 </span>
 </a>
 </div>
@@ -169,7 +240,7 @@
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#一、NAT模式（VS-NAT）"><span class="toc-number">1.</span> <span class="toc-text">一、NAT模式（VS-NAT）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#二、IP隧道模式（VS-TUN）"><span class="toc-number">2.</span> <span class="toc-text">二、IP隧道模式（VS-TUN）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#三、直接路由模式（VS-DR）"><span class="toc-number">3.</span> <span class="toc-text">三、直接路由模式（VS-DR）</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">1.</span> <span class="toc-text">1.Nexus下载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">2.</span> <span class="toc-text">2.Nexus启动</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">3.</span> <span class="toc-text">3.Nexus仓库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">4.</span> <span class="toc-text">4.建立本地仓库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">5.</span> <span class="toc-text">5.往本地仓库中添加依赖</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#undefined"><span class="toc-number">6.</span> <span class="toc-text">6.在maven项目中引入本地仓库依赖</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">6.1.</span> <span class="toc-text">1.在项目pom中配置相关私服信息</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">6.2.</span> <span class="toc-text">2.找到maven安装目录下的conf/setting.xml文件，添加Nexus仓库访问权限 </span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#undefined"><span class="toc-number">6.3.</span> <span class="toc-text">3.选择Tab中的Browse Index，找到本地仓库对应的jar包，获取对应的pom文件的依赖配置，并添加到pom.xml </span></a></li></ol></li></ol>
   </div>
 
 <div id="asidepart">
