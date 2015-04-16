@@ -84,7 +84,7 @@
     </p>
   <p class="article-time">
     <time datetime="2015-04-16T03:25:37.000Z" itemprop="datePublished">4月 16 2015</time>
-    更新日期:<time datetime="2015-04-16T03:45:10.000Z" itemprop="dateModified">4月 16 2015</time>
+    更新日期:<time datetime="2015-04-16T04:54:52.000Z" itemprop="dateModified">4月 16 2015</time>
     
   </p>
 </header>
@@ -104,13 +104,12 @@
 <li>group: 仓库组</li>
 <li>hosted：宿主</li>
 <li>proxy：代理</li>
-<li><p>virtual：虚拟</p>
-<pre><code> 一般用到的仓库种类是hosted、proxy。Hosted代表宿主仓库，用来发布一些第三方不允许的组件，比如oracle驱动、比如商业软件jar包。Proxy代表代理远程的仓库，最典型的就是Maven  官方中央仓库、JBoss仓库等等。如果构建的Maven项目本地仓库没有依赖包，那么就会去这个代理站点去下载，那么如果代理站点也没有此依赖包，就回去远程中央仓库下载依赖，这些中央仓库就是proxy。代理站点下载成功后再下载至本机。
-
-首次登陆nexus后可以看到以下一个仓库组和多个仓库。
-</code></pre></li>
-<li><p>Public Repositories:  仓库组</p>
-</li>
+<li>virtual：虚拟</li>
+</ul>
+<p>一般用到的仓库种类是hosted、proxy。Hosted代表宿主仓库，用来发布一些第三方不允许的组件，比如oracle驱动、比如商业软件jar包。Proxy代表代理远程的仓库，最典型的就是Maven  官方中央仓库、JBoss仓库等等。<br>如果构建的Maven项目本地仓库没有依赖包，那么就会去这个代理站点去下载，那么如果代理站点也没有此依赖包，就回去远程中央仓库下载依赖，这些中央仓库就是proxy。代理站点下载成功后再下载至本机。</p>
+<p>首次登陆nexus后可以看到以下一个仓库组和多个仓库。</p>
+<ul>
+<li>Public Repositories:  仓库组</li>
 <li>3rd party: 无法从公共仓库获得的第三方发布版本的构件仓库</li>
 <li>Apache Snapshots: 用了代理ApacheMaven仓库快照版本的构件仓库</li>
 <li>Central: 用来代理maven中央仓库中发布版本构件的仓库</li>
